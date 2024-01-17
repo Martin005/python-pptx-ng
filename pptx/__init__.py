@@ -1,8 +1,8 @@
 # encoding: utf-8
 
-"""Initialization module for python-pptx package."""
+"""Initialization module for python-pptx-ng package."""
 
-__version__ = "0.7.9"
+__version__ = "0.7.0"
 
 
 import pptx.exc as exceptions
@@ -93,6 +93,7 @@ del (
     CT,
     PartFactory,
 )
+
 
 def get_version():
     print(f"Currently using version: {__version__}")

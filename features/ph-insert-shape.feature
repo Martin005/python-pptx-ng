@@ -1,6 +1,6 @@
 Feature: Insert a shape into a placeholder
   In order to add a shape to a slide at a pre-defined location and size
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need a way to insert a shape into a placeholder
 
 

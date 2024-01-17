@@ -1,6 +1,6 @@
 Feature: Query and set font color
   In order to color text to suit a presentation application
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need to query and set the color of text
 
   Scenario Outline: Get font color type

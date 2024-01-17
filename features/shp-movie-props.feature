@@ -1,6 +1,6 @@
 Feature: Movie shape properties
   In order to interact with movie shapes
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need a set of properties describing a movie shape
 
 

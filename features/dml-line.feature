@@ -1,6 +1,6 @@
 Feature: Get and change line properties
   In order to format a shape outline and other line elements
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need a set of read/write line properties on line elements
 
 

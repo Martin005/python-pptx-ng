@@ -1,6 +1,6 @@
 Feature: Picture properties and methods
   In order to manipulate Picture shapes
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need a set of properties and methods on the Picture object
 
 

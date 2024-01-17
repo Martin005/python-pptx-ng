@@ -12,7 +12,7 @@ PowerPoint supports hyperlinks at two distinct levels:
 
 Hyperlinks in PowerPoint can have four types of targets:
 
-* a Internet address, such as https://github/scanny/python-pptx, including an
+* a Internet address, such as https://github/Martin005/python-pptx-ng, including an
   optional anchor (e.g. #sub-heading suffix to jump mid-page). This can also
   be an email address, launching the local email client. A mailto: URI is used,
   with subject specifiable using a '?subject=xyz' suffix.
@@ -49,9 +49,9 @@ out exactly which shapes can be hyperlinked.
 ::
 
     r = p.add_run()
-    r.text = 'link to python-pptx @ GitHub'
+    r.text = 'link to python-pptx-ng @ GitHub'
     hlink = r.hyperlink
-    hlink.address = 'https://github.com/scanny/python-pptx'
+    hlink.address = 'https://github.com/Martin005/python-pptx-ng'
 
 
 Roadmap items
@@ -76,9 +76,9 @@ Add a hyperlink::
 
     p = shape.text_frame.paragraphs[0]
     r = p.add_run()
-    r.text = 'link to python-pptx @ GitHub'
+    r.text = 'link to python-pptx-ng @ GitHub'
     hlink = r.hyperlink
-    hlink.address = 'https://github.com/scanny/python-pptx'
+    hlink.address = 'https://github.com/Martin005/python-pptx-ng'
 
 Delete a hyperlink::
 
@@ -160,7 +160,7 @@ Link on a run within a paragraph::
         <a:rPr lang="en-US" dirty="0" smtClean="0">
           <a:hlinkClick r:id="rId2"/>
         </a:rPr>
-        <a:t>the python-pptx repository on GitHub</a:t>
+        <a:t>the python-pptx-ng repository on GitHub</a:t>
       </a:r>
       <a:endParaRPr lang="en-US" dirty="0"/>
     </a:p>

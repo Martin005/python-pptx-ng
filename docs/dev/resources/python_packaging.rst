@@ -22,7 +22,7 @@ Distribution tests
 * acceptance tests pass in install environment
 * ``python setup.py install`` produces expected footprint in ``site-packages``
 * easy_install works
-* ``pip install python-pptx`` works
+* ``pip install python-pptx-ng`` works
 
 
 Test can install with all popular methods

@@ -1,6 +1,6 @@
 Feature: Get and set point properties
   In order to customize the formatting of a data point
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need a way to get and set point properties
 
 

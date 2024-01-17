@@ -1,6 +1,6 @@
 Feature: Get and change properties of shape text frame
   In order configure the text container of a shape to my needs
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need a set of properties on the text frame of a shape
 
 

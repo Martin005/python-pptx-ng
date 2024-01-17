@@ -1,6 +1,6 @@
 Feature: Placeholder inherits properties
   In order to conveniently access effective placeholder property values
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need a placeholder to provide property values that reflect inheritance
 
   Scenario: Master placeholder property values

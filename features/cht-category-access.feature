@@ -1,6 +1,6 @@
 Feature: Access a category
   In order to operate on an individual category
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need sequence operations on the Categories object
 
 

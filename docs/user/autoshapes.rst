@@ -47,7 +47,7 @@ centimeters, for example. Being an integer, it can be represented exactly
 across serializations and across platforms.
 
 As you might imagine, working directly in EMU is inconvenient. To make it
-easier, python-pptx provides a collection of value types to allow easy
+easier, python-pptx-ng provides a collection of value types to allow easy
 specification and conversion into convenient units::
 
     >>> from pptx.util import Inches, Pt
@@ -146,7 +146,7 @@ Line
 The outline of an AutoShape can also be formatted, including setting its
 color, width, dash (solid, dashed, dotted, etc.), line style (single, double,
 thick-thin, etc.), end cap, join type, and others. At the time of writing,
-color and width can be set using python-pptx::
+color and width can be set using python-pptx-ng::
 
     >>> line = shape.line
     >>> line.color.rgb = RGBColor(255, 0, 0)

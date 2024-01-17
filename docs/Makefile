@@ -77,17 +77,17 @@ qthelp:
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
 	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
-	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/python-pptx.qhcp"
+	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/python-pptx-ng.qhcp"
 	@echo "To view the help file:"
-	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/python-pptx.qhc"
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/python-pptx-ng.qhc"
 
 devhelp:
 	$(SPHINXBUILD) -b devhelp $(ALLSPHINXOPTS) $(BUILDDIR)/devhelp
 	@echo
 	@echo "Build finished."
 	@echo "To view the help file:"
-	@echo "# mkdir -p $$HOME/.local/share/devhelp/python-pptx"
-	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/python-pptx"
+	@echo "# mkdir -p $$HOME/.local/share/devhelp/python-pptx-ng"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/python-pptx-ng"
 	@echo "# devhelp"
 
 epub:

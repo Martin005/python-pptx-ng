@@ -1,6 +1,6 @@
 Feature: slide background
   In order to manipulate the background of a slide or master
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need properties and methods on the _Background object
 
 

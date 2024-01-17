@@ -1,6 +1,6 @@
 Feature: Presentation properties
   In order to interact with a presentation
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need read/write properties on the presentation object
 
 

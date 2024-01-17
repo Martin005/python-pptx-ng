@@ -1,6 +1,6 @@
 Feature: Read and write core document properties
   In order to find documents and make them manageable by digital means
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need to access and assign Dublin Core metadata for a presentation
 
   Scenario: round-trip Dublin Core metadata describing a presentation

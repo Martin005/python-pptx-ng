@@ -1,6 +1,6 @@
 Feature: Access a shape on a slide
   In order to interact with a shape
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need ways to access a shape on a slide
 
 

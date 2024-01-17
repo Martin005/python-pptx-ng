@@ -1,6 +1,6 @@
 Feature: Axis properties
   In order to customize the formatting of an axis on a chart
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need read/write properties on Axis
 
 

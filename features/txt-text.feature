@@ -1,6 +1,6 @@
 Feature: Access and mutate text in a shape
   In order to discover and change the text in a presentation
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need a way to access and mutate the text in a shape
 
 

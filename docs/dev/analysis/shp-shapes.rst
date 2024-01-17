@@ -43,7 +43,7 @@ custom geometry shapes.
 ``Shape.shape_id`` and ``Shape.name``
 -------------------------------------
 
-``Shape.shape_id`` is read-only and is assigned by python-pptx when
+``Shape.shape_id`` is read-only and is assigned by python-pptx-ng when
 necessary.
 
 Proposed protocol::

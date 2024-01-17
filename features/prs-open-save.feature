@@ -1,5 +1,5 @@
 Feature: Round-trip a presentation
-  In order to satisfy myself that python-pptx might work
+  In order to satisfy myself that python-pptx-ng might work
   As a pptx developer
   I want to see it pass a basic sanity-check
 

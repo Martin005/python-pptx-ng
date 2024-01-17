@@ -749,7 +749,7 @@ class PP_MEDIA_TYPE(Enumeration):
             -2,
             "Return value only; indicates multiple media types,"
             " typically for a collection of shapes. May not be applicable in"
-            " python-pptx.",
+            " python-pptx-ng.",
         ),
     )
 
@@ -858,7 +858,11 @@ class _ProgIdEnum(object):
             return self._width
 
     def __contains__(self, item):
-        return item in (self.DOCX, self.PPTX, self.XLSX,)
+        return item in (
+            self.DOCX,
+            self.PPTX,
+            self.XLSX,
+        )
 
     def __repr__(self):
         return "%s.PROG_ID" % __name__

@@ -51,7 +51,7 @@ class DescribeCorePropertiesPart(object):
         assert core_props.partname == "/docProps/core.xml"
         assert isinstance(core_props._element, CT_CoreProperties)
         assert core_props.title == "PowerPoint Presentation"
-        assert core_props.last_modified_by == "python-pptx"
+        assert core_props.last_modified_by == "python-pptx-ng"
         assert core_props.revision == 1
         # core_props.modified only stores time with seconds resolution, so
         # comparison needs to be a little loose (within two seconds)
@@ -106,14 +106,14 @@ class DescribeCorePropertiesPart(object):
 
     @pytest.fixture(
         params=[
-            ("author", "python-pptx"),
+            ("author", "python-pptx-ng"),
             ("category", ""),
             ("comments", ""),
             ("content_status", "DRAFT"),
             ("identifier", "GXS 10.2.1ab"),
             ("keywords", "foo bar baz"),
             ("language", "US-EN"),
-            ("last_modified_by", "Steve Canny"),
+            ("last_modified_by", "Martin Chrastek"),
             ("subject", "Spam"),
             ("title", "Presentation"),
             ("version", "1.2.88"),
@@ -125,7 +125,7 @@ class DescribeCorePropertiesPart(object):
 
     @pytest.fixture(
         params=[
-            ("author", "dc:creator", "scanny"),
+            ("author", "dc:creator", "Martin005"),
             ("category", "cp:category", "silly stories"),
             ("comments", "dc:description", "Bar foo to you"),
             ("content_status", "cp:contentStatus", "FINAL"),
@@ -191,7 +191,7 @@ class DescribeCorePropertiesPart(object):
             b'itype/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="h'
             b'ttp://www.w3.org/2001/XMLSchema-instance">\n'
             b"  <cp:contentStatus>DRAFT</cp:contentStatus>\n"
-            b"  <dc:creator>python-pptx</dc:creator>\n"
+            b"  <dc:creator>python-pptx-ng</dc:creator>\n"
             b'  <dcterms:created xsi:type="dcterms:W3CDTF">2012-11-17T11:07:'
             b"40-05:30</dcterms:created>\n"
             b"  <dc:description/>\n"
@@ -199,7 +199,7 @@ class DescribeCorePropertiesPart(object):
             b"  <dc:language>US-EN</dc:language>\n"
             b"  <cp:lastPrinted>2014-06-04T04:28:00Z</cp:lastPrinted>\n"
             b"  <cp:keywords>foo bar baz</cp:keywords>\n"
-            b"  <cp:lastModifiedBy>Steve Canny</cp:lastModifiedBy>\n"
+            b"  <cp:lastModifiedBy>Martin Chrastek</cp:lastModifiedBy>\n"
             b"  <cp:revision>4</cp:revision>\n"
             b"  <dc:subject>Spam</dc:subject>\n"
             b"  <dc:title>Presentation</dc:title>\n"

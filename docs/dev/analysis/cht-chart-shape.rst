@@ -34,7 +34,7 @@ Acceptance tests
 
     Feature: Access chart object
       In order to operate on a chart in a presentation
-      As a developer using python-pptx
+      As a developer using python-pptx-ng
       I need a way to find and access a chart
 
       Scenario Outline: Identify a shape containing a chart

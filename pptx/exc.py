@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 """
-Exceptions used with python-pptx.
+Exceptions used with python-pptx-ng.
 
 The base exception class is PythonPptxError.
 """

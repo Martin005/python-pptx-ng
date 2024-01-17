@@ -1,6 +1,6 @@
 Feature: Access chart legend
   In order to customize the legend for a chart
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need a way to access the chart legend
 
   Scenario Outline: Determine presence of legend

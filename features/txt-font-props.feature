@@ -1,6 +1,6 @@
 Feature: Change appearance of font used to render text
   In order to fine-tune the appearance of text
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need a set of properties on the font used to render text
 
 

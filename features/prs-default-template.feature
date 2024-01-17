@@ -1,6 +1,6 @@
 Feature: Default presentation template is provided
   In order to get started on a presentation with a minimum of preparation
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I would like the option to start from a default template
 
   Scenario: Create a minimal presentation from the default template

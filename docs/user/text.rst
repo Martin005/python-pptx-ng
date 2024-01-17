@@ -176,4 +176,4 @@ this will not change color when the theme is changed::
 
 A run can also be made into a hyperlink by providing a target URL::
 
-    run.hyperlink.address = 'https://github.com/scanny/python-pptx'
+    run.hyperlink.address = 'https://github.com/Martin005/python-pptx-ng'

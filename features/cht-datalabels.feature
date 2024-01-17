@@ -1,6 +1,6 @@
 Feature: Access and modify data labels properties
   In order to customize the appearance of data labels on a chart
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need access to data label objects and their properties
 
 # ---DataLabels---

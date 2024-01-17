@@ -137,8 +137,8 @@ def when_I_assign_value_to_paragraph_space_before_after(
 
 @when("I set the hyperlink address")
 def when_set_hyperlink_address(context):
-    context.run_text = "python-pptx @ GitHub"
-    context.address = "https://github.com/scanny/python-pptx"
+    context.run_text = "python-pptx-ng @ GitHub"
+    context.address = "https://github.com/Martin005/python-pptx-ng"
 
     run = context.run
     run.text = context.run_text

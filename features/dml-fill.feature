@@ -1,6 +1,6 @@
 Feature: Control fill
   In order to fine-tune the visual experience of filled areas
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need properties and methods on FillFormat
 
 

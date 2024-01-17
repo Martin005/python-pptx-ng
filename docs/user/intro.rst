@@ -3,7 +3,7 @@
 Introduction
 ============
 
-*python-pptx* is a Python library for creating and updating PowerPoint (.pptx)
+*python-pptx-ng* is a Python library for creating and updating PowerPoint (.pptx)
 files.
 
 A typical use would be generating a customized PowerPoint presentation from
@@ -19,7 +19,7 @@ examples that I hope will allow you to learn what you need while addressing
 the real-life PowerPoint challenges you're working on.
 
 
-python-pptx License
+python-pptx-ng License
 -------------------
 
     .. include:: ../../LICENSE

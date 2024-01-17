@@ -1,6 +1,6 @@
 Feature: Gridlines properties
   To customize the formatting of chart gridlines
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need read/write properties on major and minor gridlines objects
 
 

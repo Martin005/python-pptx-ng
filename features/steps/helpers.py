@@ -24,7 +24,7 @@ no_core_props_pptx_path = absjoin(
 # scratch test pptx file ---------------
 saved_pptx_path = absjoin(scratch_dir, "test_out.pptx")
 
-test_text = "python-pptx was here!"
+test_text = "python-pptx-ng was here!"
 
 
 def cls_qname(obj):

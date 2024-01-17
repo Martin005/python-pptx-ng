@@ -1,6 +1,6 @@
 Feature: Get and change common slide placeholder properties
   In order to identify and characterize placeholder shapes
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need a common set of properties available on any slide placeholder
 
 

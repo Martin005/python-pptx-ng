@@ -1,6 +1,6 @@
 Feature: Get and set marker properties
   In order to customize the visual display of a data point marker
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need a way to get and set marker properties
 
 

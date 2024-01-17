@@ -1,6 +1,6 @@
 Feature: Control color
   In order to fine-tune the color of filled areas and lines
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need properties and methods on ColorFormat
 
 

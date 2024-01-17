@@ -1,6 +1,6 @@
 Feature: Get or set an external hyperlink on a shape or text run
   In order to connect a presentation to external resources
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need CRUD operations on the Hyperlink object
 
 

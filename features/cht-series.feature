@@ -1,6 +1,6 @@
 Feature: Chart series
   In order to customize the formatting of a series on a chart
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need access to series objects and their properties
 
 

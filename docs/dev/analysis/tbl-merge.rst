@@ -164,7 +164,7 @@ PowerPoint behaviors
   grid and row heights etc. to accommodate, adding (potentially very many)
   new merged cells as required.
 
-  `python-pptx` just removes the merge, restoring the underlying table grid
+  `python-pptx-ng` just removes the merge, restoring the underlying table grid
   cells to regular (unmerged) cells.
 
 

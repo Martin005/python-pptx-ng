@@ -77,9 +77,9 @@ Add a hyperlink::
 
     p = shape.text_frame.paragraphs[0]
     r = p.add_run()
-    r.text = 'link to python-pptx @ GitHub'
+    r.text = 'link to python-pptx-ng @ GitHub'
     hlink = r.hyperlink
-    hlink.address = 'https://github.com/scanny/python-pptx'
+    hlink.address = 'https://github.com/Martin005/python-pptx-ng'
 
 Delete a hyperlink::
 
@@ -434,7 +434,7 @@ provided in the `ppaction://` URL in the `a:hlinkClick` element::
   <Relationship
     Id="rId3"
     Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink"
-    Target="file://localhost/Users/scanny/Documents/checksec-prelim-analysis.pptx"
+    Target="file://localhost/Users/Martin005/Documents/checksec-prelim-analysis.pptx"
     TargetMode="External"/>
 
 Web link (hyperlink)
@@ -454,7 +454,7 @@ Note: The `action` attribute of `a:hlinkClick` has no value in this case.
 The corresponding `Relationship` element must be of type `hyperlink`, be
 *external*, and point to the target URL (using a web protocol).
 
-The target is often a web URL, such as https://github/scanny/python-pptx,
+The target is often a web URL, such as https://github/Martin005/python-pptx-ng,
 including an optional anchor (e.g. #sub-heading suffix to jump mid-page). The
 target can also be an email address, launching the local email client.
 A mailto: URI is used in this case, with subject specifiable using

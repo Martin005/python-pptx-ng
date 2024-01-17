@@ -10,7 +10,7 @@ class ElementProxy(object):
     Base class for lxml element proxy classes. An element proxy class is one
     whose primary responsibilities are fulfilled by manipulating the
     attributes and child elements of an XML element. They are the most common
-    type of class in python-pptx other than custom element (oxml) classes.
+    type of class in python-pptx-ng other than custom element (oxml) classes.
     """
 
     def __init__(self, element):

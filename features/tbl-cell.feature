@@ -1,6 +1,6 @@
 Feature: Table cell proxy objects
   In order to change the formatting of a cell in a table to my needs
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need properties and methods on cell objects
 
 

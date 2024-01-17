@@ -1,6 +1,6 @@
 Feature: Shape properties and methods
   In order to identify and adjust autoshapes
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need properties and methods on Shape
 
 

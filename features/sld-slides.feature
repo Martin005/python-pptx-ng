@@ -1,6 +1,6 @@
 Feature: Access an individual slide
   In order to interact with an individual slide
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need ways to create, access, or delete a slide
 
 

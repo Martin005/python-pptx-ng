@@ -24,10 +24,25 @@ from pptx.text.text import (
     TextListStyle,
     ParagraphProperties,
 )
-from pptx.text.bullets import TextBullet, TextBulletColor, TextBulletSize, TextBulletTypeface
+from pptx.text.bullets import (
+    TextBullet,
+    TextBulletColor,
+    TextBulletSize,
+    TextBulletTypeface,
+)
 from pptx.util import Inches, Pt
 
-from ..oxml.unitdata.text import a_p, a_t, an_hlinkClick, an_r, an_rPr, an_pPr, an_extLst, an_ext, an_hlinkClr
+from ..oxml.unitdata.text import (
+    a_p,
+    a_t,
+    an_hlinkClick,
+    an_r,
+    an_rPr,
+    an_pPr,
+    an_extLst,
+    an_ext,
+    an_hlinkClr,
+)
 from ..unitutil.cxml import element, xml
 from ..unitutil.mock import (
     class_mock,
@@ -497,6 +512,7 @@ class DescribeTextFrame(object):
         parent_ = loose_mock(request, name="parent_")
         return TextFrame(element("p:txBody"), parent_)
 
+
 class DescribeFont(object):
     """Unit-test suite for `pptx.text.text.Font` object."""
 
@@ -676,14 +692,17 @@ class DescribeFont(object):
         expected_xml = xml(expected_rPr_cxml)
         return font, new_value, expected_xml
 
-    @pytest.fixture(params=[("a:rPr", None), ("a:rPr{baseline=30000}", .3)])
+    @pytest.fixture(params=[("a:rPr", None), ("a:rPr{baseline=30000}", 0.3)])
     def baseline_get_fixture(self, request):
         rPr_cxml, expected_value = request.param
         font = Font(element(rPr_cxml))
         return font, expected_value
 
     @pytest.fixture(
-        params=[("a:rPr", -.25, "a:rPr{baseline=-25000}"), ("a:rPr{baseline=2500}", None, "a:rPr")]
+        params=[
+            ("a:rPr", -0.25, "a:rPr{baseline=-25000}"),
+            ("a:rPr{baseline=2500}", None, "a:rPr"),
+        ]
     )
     def baseline_set_fixture(self, request):
         rPr_cxml, new_value, expected_rPr_cxml = request.param
@@ -739,7 +758,7 @@ class DescribeFont(object):
             ("a:rPr", None),
             ("a:rPr{strike=noStrike}", False),
             ("a:rPr{strike=sngStrike}", True),
-            ("a:rPr{strike=dblStrike}", 'dblStrike'),
+            ("a:rPr{strike=dblStrike}", "dblStrike"),
         ]
     )
     def strikethrough_get_fixture(self, request):
@@ -751,8 +770,8 @@ class DescribeFont(object):
         params=[
             ("a:rPr", True, "a:rPr{strike=sngStrike}"),
             ("a:rPr{strike=sngStrike}", False, "a:rPr{strike=noStrike}"),
-            ("a:rPr{strike=noStrike}", 'dblStrike', "a:rPr{strike=dblStrike}"),
-            ("a:rPr{strike=dblStrike}", 'sngStrike', "a:rPr{strike=sngStrike}"),
+            ("a:rPr{strike=noStrike}", "dblStrike", "a:rPr{strike=dblStrike}"),
+            ("a:rPr{strike=dblStrike}", "sngStrike", "a:rPr{strike=sngStrike}"),
             ("a:rPr{strike=sngStrike}", None, "a:rPr"),
         ]
     )
@@ -819,7 +838,6 @@ class Describe_Hyperlink(object):
         hyperlink, expected_xml = add_hyperlink_color_fixture
         hyperlink.add_hyperlink_color()
         assert hyperlink._rPr.xml == expected_xml
-
 
     # fixtures ---------------------------------------------
 
@@ -890,11 +908,11 @@ class Describe_Hyperlink(object):
 
     @pytest.fixture
     def url(self):
-        return "https://github.com/scanny/python-pptx"
+        return "https://github.com/Martin005/python-pptx-ng"
 
     @pytest.fixture
     def url_2(self):
-        return "https://pypi.python.org/pypi/python-pptx"
+        return "https://pypi.python.org/pypi/python-pptx-ng"
 
     @pytest.fixture
     def add_hyperlink_color_fixture(
@@ -904,17 +922,25 @@ class Describe_Hyperlink(object):
         extList_bldr = an_extLst()
         ext_bldr = an_ext()
         uri = "{A12FA001-AC4F-418D-AE19-62706E023703}"
-        
-        new_rPr_with_extList = an_rPr().with_nsdecls("a", "r") \
-                                .with_child(hlinkClick_bldr \
-                                .with_child(extList_bldr \
-                                .with_child(an_ext().with_uri(uri) \
-                                .with_child(an_hlinkClr().with_nsdecls("ahyp").with_val("tx")))))
-        
+
+        new_rPr_with_extList = (
+            an_rPr()
+            .with_nsdecls("a", "r")
+            .with_child(
+                hlinkClick_bldr.with_child(
+                    extList_bldr.with_child(
+                        an_ext()
+                        .with_uri(uri)
+                        .with_child(an_hlinkClr().with_nsdecls("ahyp").with_val("tx"))
+                    )
+                )
+            )
+        )
 
         part_.relate_to.return_value = rId
         property_mock(request, _Hyperlink, "part", return_value=part_)
         return hlink_with_hlinkClick, new_rPr_with_extList.xml()
+
 
 class Describe_Paragraph(object):
     """Unit test suite for pptx.text.text._Paragraph object."""
@@ -1467,17 +1493,17 @@ class Describe_TextFont(object):
 
     # fixtures ---------------------------------------------
 
-
-    @pytest.fixture(
-        params=[("a:latin", None), ("a:latin{typeface=Foobar}", "Foobar")]
-    )
+    @pytest.fixture(params=[("a:latin", None), ("a:latin{typeface=Foobar}", "Foobar")])
     def typeface_get_fixture(self, request):
         latin_cxml, expected_value = request.param
         text_font = TextFont(element(latin_cxml))
         return text_font, expected_value
 
     @pytest.fixture(
-        params=[("a:latin", None), ("a:latin{panose=020F0502020204030204}", "020F0502020204030204")]
+        params=[
+            ("a:latin", None),
+            ("a:latin{panose=020F0502020204030204}", "020F0502020204030204"),
+        ]
     )
     def panose_get_fixture(self, request):
         latin_cxml, expected_value = request.param
@@ -1485,7 +1511,11 @@ class Describe_TextFont(object):
         return text_font, expected_value
 
     @pytest.fixture(
-        params=[("a:latin", 0), ("a:latin{pitchFamily=1}", 1), ("a:latin{pitchFamily=0}", 0)]
+        params=[
+            ("a:latin", 0),
+            ("a:latin{pitchFamily=1}", 1),
+            ("a:latin{pitchFamily=0}", 0),
+        ]
     )
     def pitch_get_fixture(self, request):
         latin_cxml, expected_value = request.param
@@ -1551,7 +1581,9 @@ class Describe_ParagraphProperties(object):
         paragraph.alignment = new_value
         assert paragraph._element.xml == expected_xml
 
-    def it_provides_access_to_the_default_paragraph_font(self, paragraph_properties, Font_):
+    def it_provides_access_to_the_default_paragraph_font(
+        self, paragraph_properties, Font_
+    ):
         font = paragraph_properties.font
         Font_.assert_called_once_with(paragraph_properties._defRPr)
         assert font == Font_.return_value
@@ -1859,7 +1891,6 @@ class Describe_ParagraphProperties(object):
         paragraph = ParagraphProperties(element(p_cxml))
         expected_xml = xml(expected_p_cxml)
         return paragraph, new_value, expected_xml
-
 
     # fixture components -----------------------------------
     @pytest.fixture

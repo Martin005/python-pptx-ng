@@ -31,7 +31,7 @@ Caveats
   but leaving NY as the state (by leaving that cell blank).
 
   Basically, the meaning of a structure like this is ambiguous. PowerPoint
-  interprets it without error and python-pptx interprets it without error, but
+  interprets it without error and python-pptx-ng interprets it without error, but
   the results might not exactly match up. PowerPoint seems to take the senior
   category break and show the intermediate category as blank or 'None'. But
   I suppose it could be interpreted as the senior category just splits

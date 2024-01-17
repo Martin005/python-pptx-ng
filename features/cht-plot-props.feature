@@ -1,6 +1,6 @@
 Feature: Plot properties
   To customize the formatting of a plot on a chart
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need read/write properties on plot objects
 
 

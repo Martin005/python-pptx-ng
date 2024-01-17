@@ -1,6 +1,6 @@
 Feature: Resize text to fit shape
   In order to reliably fit text into a shape of fixed size
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need a way to reduce the point size of text to fit within its shape
 
   Scenario: Set text size to best-fit point size

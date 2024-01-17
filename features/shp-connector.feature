@@ -1,6 +1,6 @@
 Feature: Connector properties and methods
   In order to characterize and adjust Connectors
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need properties and methods on Connector
 
 

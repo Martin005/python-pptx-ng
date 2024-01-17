@@ -1,6 +1,6 @@
 Feature: Get and set legend properties
   In order to customize the appearance of the legend on a chart
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need a way to get and set legend properties
 
 

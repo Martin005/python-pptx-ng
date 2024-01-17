@@ -35,8 +35,8 @@ Release procedure
 
 * synchronize local repo with github
 
-  + ``$ git push scanny develop``
-  + ``$ git push scanny master``
+  + ``$ git push Martin005 develop``
+  + ``$ git push Martin005 master``
   + ``$ git push --tags``
 
 * docs regenerated

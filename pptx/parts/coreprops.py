@@ -25,7 +25,7 @@ class CorePropertiesPart(XmlPart):
         """
         core_props = cls._new(package)
         core_props.title = "PowerPoint Presentation"
-        core_props.last_modified_by = "python-pptx"
+        core_props.last_modified_by = "python-pptx-ng"
         core_props.revision = 1
         core_props.modified = datetime.utcnow()
         return core_props

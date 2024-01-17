@@ -41,7 +41,7 @@ MS API protocol::
     >>> axis.ReversePlotOrder
     True
 
-Proposed python-pptx protocol::
+Proposed python-pptx-ng protocol::
 
     >>> axis = chart.category_axis
     >>> axis.reverse_order
@@ -54,7 +54,7 @@ Proposed python-pptx protocol::
 Tick label position
 ~~~~~~~~~~~~~~~~~~~
 
-Proposed python-pptx protocol::
+Proposed python-pptx-ng protocol::
 
     >>> axis.tick_label_position
     XL_TICK_LABEL_POSITION.NEXT_TO_AXIS
@@ -79,7 +79,7 @@ element is present with no ``val`` attribute.
 TickLabels.number_format
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Proposed python-pptx protocol::
+Proposed python-pptx-ng protocol::
 
     >>> tick_labels = axis.tick_labels
     >>> tick_labels.number_format

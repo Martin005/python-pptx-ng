@@ -1,6 +1,6 @@
 Feature: Common shape properties
   In order to interact with shapes of assorted types
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need a common set of properties available on all shapes
 
 

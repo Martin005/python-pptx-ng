@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# python-pptx documentation build configuration file, created by
+# python-pptx-ng documentation build configuration file, created by
 # sphinx-quickstart on Thu Nov 29 13:59:35 2012.
 #
 # This file is execfile()d with the current directory set to its containing
@@ -68,8 +68,8 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = u"python-pptx"
-copyright = u"2012, 2013, Steve Canny"
+project = "python-pptx-ng"
+copyright = "2012, 2013, Steve Canny. 2024, Martin Chrastek"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -288,7 +288,7 @@ rst_epilog = """
 
 .. |Point| replace:: :class:`.Point`
 
-.. |pp| replace:: `python-pptx`
+.. |pp| replace:: `python-pptx-ng`
 
 .. |Presentation| replace:: :class:`~pptx.presentation.Presentation`
 
@@ -484,7 +484,7 @@ html_sidebars = {
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "python-pptxdoc"
+htmlhelp_basename = "python-pptx-ngdoc"
 
 
 # -- Options for LaTeX output -----------------------------------------------
@@ -504,9 +504,9 @@ latex_elements = {
 latex_documents = [
     (
         "index",
-        "python-pptx.tex",
-        u"python-pptx Documentation",
-        u"Steve Canny",
+        "python-pptx-ng.tex",
+        "python-pptx-ng Documentation",
+        "Martin Chrastek",
         "manual",
     ),
 ]
@@ -537,7 +537,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ("index", "python-pptx", u"python-pptx Documentation", [u"Steve Canny"], 1)
+    ("index", "python-pptx-ng", "python-pptx-ng Documentation", ["Martin Chrastek"], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -552,10 +552,10 @@ man_pages = [
 texinfo_documents = [
     (
         "index",
-        "python-pptx",
-        u"python-pptx Documentation",
-        u"Steve Canny",
-        "python-pptx",
+        "python-pptx-ng",
+        "python-pptx-ng Documentation",
+        "Martin Chrastek",
+        "python-pptx-ng",
         "One line description of project.",
         "Miscellaneous",
     ),

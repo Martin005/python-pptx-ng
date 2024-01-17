@@ -1,6 +1,6 @@
 Feature: Change paragraph properties
   In order to change the formatting of text to my needs
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need a set of read/write properties on paragraph objects
 
 

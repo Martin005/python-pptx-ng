@@ -1,6 +1,6 @@
 Feature: Get and set click action properties
   In order to determine the click action of a shape or text run
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need a set of properties on ActionSetting
 
 

@@ -1,6 +1,6 @@
 Feature: Build a freeform shape
   In order to form a desired freeform shape
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need a set of properties and methods on a FreeformBuilder object
 
 

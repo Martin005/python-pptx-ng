@@ -1,6 +1,6 @@
 Feature: Change text of a placeholder shape
   In order to achieve consistent placement and style of titles and body text
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need to set the text in a placeholder shape
 
   Scenario: Set the title of a title slide

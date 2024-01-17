@@ -45,17 +45,17 @@ PowerPoint UI behaviors
   "registered" OLE server applications.
 
   This behavior seems quite bound to some user interaction to fill out the object and in
-  any case is outside the abilities of `python-pptx` running on an arbitrary OS. This
-  behavior will have no counterpart in `python-pptx`. Only the "insert-from-file" mode
-  will be available in `python-pptx`.
+  any case is outside the abilities of `python-pptx-ng` running on an arbitrary OS. This
+  behavior will have no counterpart in `python-pptx-ng`. Only the "insert-from-file" mode
+  will be available in `python-pptx-ng`.
 
 * **Auto-detect `progId` from file.** When the "insert-from-file" option is chosen,
   PowerPoint automatically detects the `progId` (str OLE server identifier, intuitively
   "file-type") for the inserted file.
 
-  This would be a lot of work for `python-pptx` to accomplish and in the end would be
-  partial at best. The base case would be that `python-pptx` requires `progId` to be
-  specified by the caller. `python-pptx` will provide an Enum that provides ready access
+  This would be a lot of work for `python-pptx-ng` to accomplish and in the end would be
+  partial at best. The base case would be that `python-pptx-ng` requires `progId` to be
+  specified by the caller. `python-pptx-ng` will provide an Enum that provides ready access
   to common str `progId` cases like Excel Worksheet, Word Document, and PowerPoint
   Presentation. Other cases could be resolved by experimentation and inspecting the XML
   to determine the appropriate str `progId` value.
@@ -66,9 +66,9 @@ PowerPoint UI behaviors
   server application (Excel in the XLSX case) which renders to an image instead of
   rendering to the screen.
 
-  `python-pptx` has no access to an OLE server and therefore cannot request this image.
-  Only the "display as icon" mode will be supported in `python-pptx`. For this reason,
-  the `python-pptx` call will have no `display_as_icon` parameter and that "value" will
+  `python-pptx-ng` has no access to an OLE server and therefore cannot request this image.
+  Only the "display as icon" mode will be supported in `python-pptx-ng`. For this reason,
+  the `python-pptx-ng` call will have no `display_as_icon` parameter and that "value" will
   always be True.
 
 * **User-selectable and partially-generated icon.** When "display-as-icon" is selected,
@@ -84,7 +84,7 @@ PowerPoint UI behaviors
   The resulting image in the PPTX package is a Windows Meta File (WMF/EMF), a vector
   format, perhaps to allow smooth scaling.
 
-  In the general case (i.e. non-Windows OS), `python-pptx` has neither the option of
+  In the general case (i.e. non-Windows OS), `python-pptx-ng` has neither the option of
   extracting icons from an arbitrary icon or resource library or 
 
 * **Link to file rather than embed.** When inserting an object from a file, a user can
@@ -179,7 +179,7 @@ Candiate protocol
         link=False,
     )
 
-`python-pptx` only supports adding an OLE object in "display-as-icon" mode. It has no
+`python-pptx-ng` only supports adding an OLE object in "display-as-icon" mode. It has no
 way of soliciting a preview image from an OLE server application, so that option is not
 practical for us.
 
@@ -201,7 +201,7 @@ practical for us.
   ready expansion to other OLE object types.
 
   I expect that a file of any type could be included, even if it doesn't have an OLE
-  server application and it could then at least be accessed via `python-pptx`, although
+  server application and it could then at least be accessed via `python-pptx-ng`, although
   I don't suppose it would do anything useful from the PowerPoint UI. In any case, I
   don't believe it would raise an error and there wouldn't be anything we could (or
   would probably want) to do to stop someone from doing that.

@@ -1,6 +1,6 @@
 Feature: Replace chart data
   In order to update the data for a chart while retaining its formatting
-  As a developer using python-pptx
+  As a developer using python-pptx-ng
   I need a way to replace the data of a chart
 
 
