@@ -28,12 +28,14 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: '3.9'
+        cache: 'pipenv'
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         sudo pip install pipenv
         sudo rm -rf /var/lib/apt/lists/*
         sudo apt-get update
+        pipenv install wheel
         pipenv install
     - name: Build package
       run: make build
