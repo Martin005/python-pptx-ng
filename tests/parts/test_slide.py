@@ -26,8 +26,10 @@ from pptx.parts.slide import (
     SlideLayoutPart,
     SlideMasterPart,
     SlidePart,
+    ThemePart,
 )
 from pptx.slide import NotesMaster, NotesSlide, Slide, SlideLayout, SlideMaster
+from pptx.theme import Theme, ColorMap
 
 from ..unitutil.cxml import element
 from ..unitutil.file import absjoin, test_file_dir
@@ -587,8 +589,6 @@ class DescribeSlideLayoutPart(object):
 
 
 class DescribeSlideMasterPart(object):
-    """Unit-test suite for `pptx.parts.slide.SlideMasterPart` objects."""
-
     def it_provides_access_to_its_slide_master(self, request):
         slide_master_ = instance_mock(request, SlideMaster)
         SlideMaster_ = class_mock(
@@ -616,3 +616,101 @@ class DescribeSlideMasterPart(object):
 
         related_part_.assert_called_once_with(slide_master_part, "rId42")
         assert slide_layout is slide_layout_
+
+    def it_provides_access_to_its_related_theme(self, theme_fixture):
+        slide_master_part, part_related_by_, theme_ = theme_fixture
+        theme = slide_master_part.related_theme
+        part_related_by_.assert_called_once_with(slide_master_part, RT.THEME)
+        assert theme is theme_
+
+
+
+    # fixtures -------------------------------------------------------
+
+    @pytest.fixture
+    def theme_fixture(self, part_related_by_, theme_, theme_part_):
+        slide_master_part = SlideMasterPart(None, None, None, None)
+        part_related_by_.return_value = theme_part_
+        theme_part_.theme = theme_
+        return slide_master_part, part_related_by_, theme_
+
+    @pytest.fixture
+    def color_map_fixture(self, color_map_):
+        sldMaster = element("p:sldMaster")
+        slide_master_part = SlideMasterPart(None, None, sldMaster)
+        return slide_master_part, color_map_
+
+    # fixture components ---------------------------------------------
+
+    @pytest.fixture
+    def related_parts_prop_(self, request):
+        return property_mock(request, SlideMasterPart, "related_parts")
+
+    @pytest.fixture
+    def slide_layout_(self, request):
+        return instance_mock(request, SlideLayout)
+
+    @pytest.fixture
+    def theme_(self, request):
+        return instance_mock(request, Theme)
+
+    @pytest.fixture
+    def color_map_(self, request):
+        return instance_mock(request, ColorMap)
+
+    @pytest.fixture
+    def SlideMaster_(self, request, slide_master_):
+        return class_mock(
+            request, "pptx.parts.slide.SlideMaster", return_value=slide_master_
+        )
+
+    @pytest.fixture
+    def slide_master_(self, request):
+        return instance_mock(request, SlideMaster)
+
+    @pytest.fixture
+    def theme_part_(self, request):
+        return instance_mock(request, ThemePart)
+    
+    @pytest.fixture
+    def part_related_by_(self, request):
+        return method_mock(request, SlideMasterPart, "part_related_by", autospec=True)
+
+
+class DescribeThemePart(object):
+    def it_knows_its_name(self, name_fixture):
+        theme, expected_value = name_fixture
+        assert theme.name == expected_value
+
+    def it_provides_access_to_its_theme(self, theme_fixture):
+        theme_part, Theme_, sldTheme, theme_ = theme_fixture
+        theme = theme_part.theme
+        Theme_.assert_called_once_with(sldTheme)
+        assert theme is theme_
+
+
+    # fixtures -------------------------------------------------------
+
+    @pytest.fixture
+    def theme_fixture(self, Theme_, theme_):
+        sldTheme = element("a:theme")
+        theme_part = ThemePart(None, None, None, sldTheme)
+        return theme_part, Theme_, sldTheme, theme_
+
+    @pytest.fixture
+    def name_fixture(self):
+        theme_cxml, expected_value = "a:theme{name=Foobar}", "Foobar"
+        theme = element(theme_cxml)
+        theme = Theme(theme)
+        return theme, expected_value
+
+
+    # fixture components ---------------------------------------------
+
+    @pytest.fixture
+    def theme_(self, request):
+        return instance_mock(request, Theme)
+
+    @pytest.fixture
+    def Theme_(self, request, theme_):
+        return class_mock( request, "pptx.parts.slide.Theme", return_value=theme_)

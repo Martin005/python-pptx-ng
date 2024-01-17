@@ -11,7 +11,7 @@ from ...unitdata import BaseBuilder
 
 class CT_Hyperlink(BaseBuilder):
     __tag__ = "a:hlinkClick"
-    __nspfxs__ = ("a", "r")
+    __nspfxs__ = ("a", "r", )
     __attrs__ = (
         "r:id",
         "invalidUrl",
@@ -27,6 +27,30 @@ class CT_Hyperlink(BaseBuilder):
         self._set_xmlattr("r:id", rId)
         return self
 
+
+class CT_OfficeArtExtensionList(BaseBuilder):
+    __tag__ = "a:extLst"
+    __nspfxs__ = ("a",)
+    __attrs__ = ()
+
+
+class CT_PositiveSize2D(BaseBuilder):
+    __tag__ = "a:ext"
+    __nspfxs__ = ("a",)
+    __attrs__ = ("uri")
+
+    def with_uri(self, uri):
+        self._set_xmlattr("uri", uri)
+        return self
+
+class HyperlinkColorExtension(BaseBuilder):
+    __tag__ = "ahyp:hlinkClr"
+    __nspfxs__ = ("ahyp",)
+    __attrs__ = ("val")
+
+    def with_val(self, val):
+        self._set_xmlattr("val", val)
+        return self
 
 class CT_RegularTextRunBuilder(BaseBuilder):
     __tag__ = "a:r"
@@ -58,7 +82,27 @@ class CT_TextParagraphBuilder(BaseBuilder):
     __nspfxs__ = ("a",)
     __attrs__ = ()
 
+class CT_TextParagraphPropertiesBuilder(BaseBuilder):
+    """
+    Test data builder for CT_TextParagraphProperties (<a:pPr>) XML element
+    that appears as a child of <a:p>.
+    """
 
+    __tag__ = "a:pPr"
+    __nspfxs__ = ("a",)
+    __attrs__ = (
+        "marL",
+        "marR",
+        "lvl",
+        "indent",
+        "algn",
+        "defTabSz",
+        "rtl",
+        "eaLnBrk",
+        "fontAlgn",
+        "latinLnBrk",
+        "hangingPunct",
+    )
 class XsdString(BaseBuilder):
     __attrs__ = ()
 
@@ -77,9 +121,21 @@ def a_t():
     return XsdString("a:t", ("a",))
 
 
+def an_endParaRPr():
+    return CT_TextCharacterPropertiesBuilder("a:endParaRPr")
+
+
+def an_extLst():
+    return CT_OfficeArtExtensionList()
+
+def an_ext():
+    return CT_PositiveSize2D()
+
+def an_hlinkClr():
+    return HyperlinkColorExtension()
+
 def an_hlinkClick():
     return CT_Hyperlink()
-
 
 def an_r():
     return CT_RegularTextRunBuilder()
@@ -87,3 +143,7 @@ def an_r():
 
 def an_rPr():
     return CT_TextCharacterPropertiesBuilder("a:rPr")
+
+def an_pPr():
+    """Return a CT_TextParagraphPropertiesBuilder instance"""
+    return CT_TextParagraphPropertiesBuilder()

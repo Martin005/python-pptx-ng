@@ -220,6 +220,10 @@ class XsdUnsignedShort(BaseIntType):
     def validate(cls, value):
         cls.validate_int_in_range(value, 0, 65535)
 
+class XsdHexBinary(BaseStringType):
+    """
+    Type for a Hexidecimal Value.
+    """
 
 class ST_Angle(XsdInt):
     """
@@ -594,6 +598,21 @@ class ST_PositiveFixedPercentage(ST_Percentage):
     def validate(cls, value):
         cls.validate_float_in_range(value, 0.0, 1.0)
 
+class ST_PositivePercentage(ST_Percentage):
+    """Percentage value is positive or 9'
+
+    Either an integer literal representing 1000ths of a percent
+    (e.g. "42000"), or a floating point literal with a '%' suffix
+    (e.g. "42.0%). Value is constrained to range of 0% to 100%. The source
+    value is a float between 0.0 and 1.0.
+    """
+
+    @classmethod
+    def validate(cls, value):
+        cls.validate_float(value)
+        if value < 0:
+            raise TypeError("value must be 0 or positive, got %s" % value)
+
 
 class ST_RelationshipId(XsdString):
     pass
@@ -625,6 +644,10 @@ class ST_Style(XsdUnsignedByte):
     def validate(cls, value):
         cls.validate_int_in_range(value, 1, 48)
 
+
+class ST_StyleMatrixColumnIndex(XsdUnsignedInt):
+    """ style index integers """
+    pass
 
 class ST_TargetMode(XsdString):
     """
@@ -753,3 +776,593 @@ class ST_UniversalMeasure(BaseSimpleType):
         }[units_part]
         emu_value = Emu(int(round(quantity * multiplier)))
         return emu_value
+
+
+
+class ST_FontCollectionIndex(XsdTokenEnumeration):
+    """ Valid Values for Font Collections """
+    MAJOR = "major"
+    MINOR = "minor"
+    NONE = "none"
+
+    _members = (MAJOR, MINOR, NONE)
+
+
+class ST_TextPanose(XsdHexBinary):
+    """ Panose is an alpha numeric hexidecimal string 
+    Length of 10 bytes (20 characters).
+    """
+    pass
+
+
+class ST_TextPitchFamily(XsdInt):
+    """ Verification only as an integer """
+    pass
+
+
+class ST_TextCharset(XsdInt):
+    """ Verification only as an integer """
+    pass
+
+
+class ST_TextAutoNumType(XsdString):
+    """ Verification only as a string """
+    pass
+
+class ST_TextBulletStartAtNum(XsdInt):
+    """ Verification of StartAt value for Auto Numbers """
+    @classmethod
+    def validate(cls, value):
+        if not isinstance(value, numbers.Integral):
+            raise TypeError("value must be an integral type, got %s" % type(value))
+        cls.validate_int_in_range(value, 1, 32767)
+
+
+class ST_TextBulletSizePercent(ST_Percentage):
+    """ Verification for Bullet Size Percentage Vales """
+    @classmethod
+    def validate(cls, value):
+        cls.validate_float_in_range(value, .25, 4)
+
+
+class ST_SystemColorVal(XsdTokenEnumeration):
+    """
+    Valid values for system color attribute
+    """
+    color_values = (
+        "scrollBar",
+        "background",
+        "activeCaption",
+        "inactiveCaption",
+        "menu",
+        "window",
+        "windowFrame",
+        "menuText",
+        "windowText",
+        "captionText",
+        "activeBorder",
+        "inactiveBorder",
+        "appWorkspace",
+        "highlight",
+        "highlightText",
+        "btnFace",
+        "btnShadow",
+        "grayText",
+        "btnText",
+        "inactiveCaptionText",
+        "btnHighlight",
+        "3dDkShadow",
+        "3dLight",
+        "infoText",
+        "infoBk",
+        "hotLight",
+        "gradientActiveCaption",
+        "gradientInactiveCaption",
+        "menuHighlight",
+        "menuBar"
+    )
+
+    _members = color_values
+
+class ST_TextStrikeType(XsdTokenEnumeration):
+    """
+    Valid values for text strikethrough attribute
+    """
+    color_values = (
+        "noStrike",
+        "sngStrike",
+        "dblStrike"
+
+    )
+
+    _members = color_values
+
+class ST_PresetColorVal(XsdTokenEnumeration):
+    """
+    Valid vlaues for preset color attribute
+    """
+    color_values = (
+        "aliceBlue",
+        "antiqueWhite",
+        "aqua",
+        "aquamarine",
+        "azure",
+        "beige",
+        "bisque",
+        "black",
+        "blanchedAlmond",
+        "blue",
+        "blueViolet",
+        "brown",
+        "burlyWood",
+        "cadetBlue",
+        "chartreuse",
+        "chocolate",
+        "coral",
+        "cornflowerBlue",
+        "cornsilk",
+        "crimson",
+        "cyan",
+        "dkBlue",
+        "dkCyan",
+        "dkGoldenrod",
+        "dkGray",
+        "dkGreen",
+        "dkKhaki",
+        "dkMagenta",
+        "dkOliveGreen",
+        "dkOrange",
+        "dkOrchid",
+        "dkRed",
+        "dkSalmon",
+        "dkSeaGreen",
+        "dkSlateBlue",
+        "dkSlateGray",
+        "dkTurquoise",
+        "dkViolet",
+        "deepPink",
+        "deepSkyBlue",
+        "dimGray",
+        "dodgerBlue",
+        "firebrick",
+        "floralWhite",
+        "forestGreen",
+        "fuchsia",
+        "gainsboro",
+        "ghostWhite",
+        "gold",
+        "goldenrod",
+        "gray",
+        "green",
+        "greenYellow",
+        "honeydew",
+        "hotPink",
+        "indianRed",
+        "indigo",
+        "ivory",
+        "khaki",
+        "lavender",
+        "lavenderBlush",
+        "lawnGreen",
+        "lemonChiffon",
+        "ltBlue",
+        "ltCoral",
+        "ltCyan",
+        "ltGoldenrodYellow",
+        "ltGray",
+        "ltGreen",
+        "ltPink",
+        "ltSalmon",
+        "ltSeaGreen",
+        "ltSkyBlue",
+        "ltSlateGray",
+        "ltSteelBlue",
+        "ltYellow",
+        "lime",
+        "limeGreen",
+        "linen",
+        "magenta",
+        "maroon",
+        "medAquamarine",
+        "medBlue",
+        "medOrchid",
+        "medPurple",
+        "medSeaGreen",
+        "medSlateBlue",
+        "medSpringGreen",
+        "medTurquoise",
+        "medVioletRed",
+        "midnightBlue",
+        "mintCream",
+        "mistyRose",
+        "moccasin",
+        "navajoWhite",
+        "navy",
+        "oldLace",
+        "olive",
+        "oliveDrab",
+        "orange",
+        "orangeRed",
+        "orchid",
+        "paleGoldenrod",
+        "paleGreen",
+        "paleTurquoise",
+        "paleVioletRed",
+        "papayaWhip",
+        "peachPuff",
+        "peru",
+        "pink",
+        "plum",
+        "powderBlue",
+        "purple",
+        "red",
+        "rosyBrown",
+        "royalBlue",
+        "saddleBrown",
+        "salmon",
+        "sandyBrown",
+        "seaGreen",
+        "seaShell",
+        "sienna",
+        "silver",
+        "skyBlue",
+        "slateBlue",
+        "slateGray",
+        "snow",
+        "springGreen",
+        "steelBlue",
+        "tan",
+        "teal",
+        "thistle",
+        "tomato",
+        "turquoise",
+        "violet",
+        "wheat",
+        "white",
+        "whiteSmoke",
+        "yellow",
+        "yellowGreen"        
+    )
+    _members = color_values
+
+class ST_ColorSchemeIndex(XsdTokenEnumeration):
+    """
+    Valid values for scheme color attribute
+    """
+    color_values = (
+        "dk1",
+        "lt1",
+        "dk2",
+        "lt2",
+        "accent1",
+        "accent2",
+        "accent3",
+        "accent4",
+        "accent5",
+        "accent6",
+        "hlink",
+        "folHlink",
+    )
+    _members = color_values
+
+class ST_AdjCoordinate(BaseSimpleType):
+    """
+    This techincally is a Union of ST_Coordinate and ST_GeomGuideName,
+    but I haven't figured out how to do that so I'm creating this for now
+    and we can add verification here if we need to
+    """
+    @classmethod
+    def convert_from_xml(cls, str_value):
+        return str_value
+
+    @classmethod
+    def convert_to_xml(cls, value):
+        return str(value)
+
+    @classmethod
+    def validate(cls, value):
+        pass
+        # cls.validate_string(value)
+
+
+class ST_AdjAngle(BaseSimpleType):
+    """
+    This techincally is a Union of ST_Angle and ST_GeomGuideName,
+    but I haven't figured out how to do that so I'm creating this for now
+    and we can add verification here if we need to
+    """
+    @classmethod
+    def convert_from_xml(cls, str_value):
+        return str_value
+
+    @classmethod
+    def convert_to_xml(cls, value):
+        return str(value)
+
+    @classmethod
+    def validate(cls, value):
+        pass
+        # cls.validate_string(value)
+
+
+class ST_PathFillMode(XsdTokenEnumeration):
+    """
+    Valid values for path fill modes
+    """
+    fill_modes = (
+        "none",
+        "norm",
+        "lighten",
+        "lightenLess",
+        "darken",
+        "darkenLess",
+    )
+    _members = fill_modes
+
+
+class ST_LineEndType(XsdTokenEnumeration):
+    """
+    Valid Values for line end types
+    """
+    line_end_types = (
+        "none",
+        "triangle",
+        "stealth",
+        "diamond",
+        "oval",
+        "arrow",
+    )
+    _members = line_end_types
+
+class ST_LineEndWidth(XsdTokenEnumeration):
+    """
+    Valid values for line end widths
+    """
+    line_end_widths = (
+        "sm",
+        "med",
+        "lg"
+    )
+    _members = line_end_widths
+
+class ST_LineEndLength(XsdTokenEnumeration):
+    """
+    Valid Values for line end lengths
+    """
+    line_end_lengths = (
+        "sm",
+        "med",
+        "lg"
+    )
+    _members = line_end_lengths
+
+
+class ST_LineCap(XsdTokenEnumeration):
+    """
+    Valid Values for Line Cap
+    """
+    line_caps = (
+        "rnd",
+        "sq",
+        "flat"
+    )
+    _members = line_caps
+
+class ST_CompoundLine(XsdTokenEnumeration):
+    """
+    Valid Values for Compound Line Types
+    """
+    compound_types = (
+        "sng",
+        "dbl",
+        "thickThin",
+        "thinThick",
+        "tri"
+    )
+    _members = compound_types
+
+class ST_PenAlignment(XsdTokenEnumeration):
+    """
+    Valid Values for Stroke Pen Alignment
+    """
+    alignments = (
+        "ctr",
+        "in",
+    )
+    _members = alignments
+
+class ST_ShapeType(XsdTokenEnumeration):
+    """
+    List of Valid Values for Shape types.
+    This includes both connectors and Autoshapes
+    """
+    shape_types = (
+        "line",
+        "lineInv",
+        "triangle",
+        "rtTriangle",
+        "rect",
+        "diamond",
+        "parallelogram",
+        "trapezoid",
+        "nonIsoscelesTrapezoid",
+        "pentagon",
+        "hexagon",
+        "heptagon",
+        "octagon",
+        "decagon",
+        "dodecagon",
+        "star4",
+        "star5",
+        "star6",
+        "star7",
+        "star8",
+        "star10",
+        "star12",
+        "star16",
+        "star24",
+        "star32",
+        "roundRect",
+        "round1Rect",
+        "round2SameRect",
+        "round2DiagRect",
+        "snipRoundRect",
+        "snip1Rect",
+        "snip2SameRect",
+        "snip2DiagRect",
+        "plaque",
+        "ellipse",
+        "teardrop",
+        "homePlate",
+        "chevron",
+        "pieWedge",
+        "pie",
+        "blockArc",
+        "donut",
+        "noSmoking",
+        "rightArrow",
+        "leftArrow",
+        "upArrow",
+        "downArrow",
+        "stripedRightArrow",
+        "notchedRightArrow",
+        "bentUpArrow",
+        "leftRightArrow",
+        "upDownArrow",
+        "leftUpArrow",
+        "leftRightUpArrow",
+        "quadArrow",
+        "leftArrowCallout",
+        "rightArrowCallout",
+        "upArrowCallout",
+        "downArrowCallout",
+        "leftRightArrowCallout",
+        "upDownArrowCallout",
+        "quadArrowCallout",
+        "bentArrow",
+        "uturnArrow",
+        "circularArrow",
+        "leftCircularArrow",
+        "leftRightCircularArrow",
+        "curvedRightArrow",
+        "curvedLeftArrow",
+        "curvedUpArrow",
+        "curvedDownArrow",
+        "swooshArrow",
+        "cube",
+        "can",
+        "lightningBolt",
+        "heart",
+        "sun",
+        "moon",
+        "smileyFace",
+        "irregularSeal1",
+        "irregularSeal2",
+        "foldedCorner",
+        "bevel",
+        "frame",
+        "halfFrame",
+        "corner",
+        "diagStripe",
+        "chord",
+        "arc",
+        "leftBracket",
+        "rightBracket",
+        "leftBrace",
+        "rightBrace",
+        "bracketPair",
+        "bracePair",
+        "straightConnector1",
+        "bentConnector2",
+        "bentConnector3",
+        "bentConnector4",
+        "bentConnector5",
+        "curvedConnector2",
+        "curvedConnector3",
+        "curvedConnector4",
+        "curvedConnector5",
+        "callout1",
+        "callout2",
+        "callout3",
+        "accentCallout1",
+        "accentCallout2",
+        "accentCallout3",
+        "borderCallout1",
+        "borderCallout2",
+        "borderCallout3",
+        "accentBorderCallout1",
+        "accentBorderCallout2",
+        "accentBorderCallout3",
+        "wedgeRectCallout",
+        "wedgeRoundRectCallout",
+        "wedgeEllipseCallout",
+        "cloudCallout",
+        "cloud",
+        "ribbon",
+        "ribbon2",
+        "ellipseRibbon",
+        "ellipseRibbon2",
+        "leftRightRibbon",
+        "verticalScroll",
+        "horizontalScroll",
+        "wave",
+        "doubleWave",
+        "plus",
+        "flowChartProcess",
+        "flowChartDecision",
+        "flowChartInputOutput",
+        "flowChartPredefinedProcess",
+        "flowChartInternalStorage",
+        "flowChartDocument",
+        "flowChartMultidocument",
+        "flowChartTerminator",
+        "flowChartPreparation",
+        "flowChartManualInput",
+        "flowChartManualOperation",
+        "flowChartConnector",
+        "flowChartPunchedCard",
+        "flowChartPunchedTape",
+        "flowChartSummingJunction",
+        "flowChartOr",
+        "flowChartCollate",
+        "flowChartSort",
+        "flowChartExtract",
+        "flowChartMerge",
+        "flowChartOfflineStorage",
+        "flowChartOnlineStorage",
+        "flowChartMagneticTape",
+        "flowChartMagneticDisk",
+        "flowChartMagneticDrum",
+        "flowChartDisplay",
+        "flowChartDelay",
+        "flowChartAlternateProcess",
+        "flowChartOffpageConnector",
+        "actionButtonBlank",
+        "actionButtonHome",
+        "actionButtonHelp",
+        "actionButtonInformation",
+        "actionButtonForwardNext",
+        "actionButtonBackPrevious",
+        "actionButtonEnd",
+        "actionButtonBeginning",
+        "actionButtonReturn",
+        "actionButtonDocument",
+        "actionButtonSound",
+        "actionButtonMovie",
+        "gear6",
+        "gear9",
+        "funnel",
+        "mathPlus",
+        "mathMinus",
+        "mathMultiply",
+        "mathDivide",
+        "mathEqual",
+        "mathNotEqual",
+        "cornerTabs",
+        "squareTabs",
+        "plaqueTabs",
+        "chartX",
+        "chartStar",
+        "chartPlus",
+    )
+    _members = shape_types

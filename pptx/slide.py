@@ -4,6 +4,7 @@
 
 from pptx.dml.fill import FillFormat
 from pptx.enum.shapes import PP_PLACEHOLDER
+from pptx.text.text import TextListStyle
 from pptx.shapes.shapetree import (
     LayoutPlaceholders,
     LayoutShapes,
@@ -14,6 +15,7 @@ from pptx.shapes.shapetree import (
     SlidePlaceholders,
     SlideShapes,
 )
+from pptx.theme import ColorMap
 from pptx.shared import ElementProxy, ParentedElementProxy, PartElementProxy
 from pptx.util import lazyproperty
 
@@ -238,6 +240,14 @@ class Slide(_BaseSlide):
         |SlideLayout| object this slide inherits appearance from.
         """
         return self.part.slide_layout
+    
+    @property
+    def color_map_override(self):
+        """ A new |ColorMap| to override that from the Slide Master or None"""
+        color_map = self._element.clrMapOvr.color_map_override
+        if color_map is None:
+            return None
+        return ColorMap(color_map)
 
 
 class Slides(ParentedElementProxy):
@@ -355,6 +365,27 @@ class SlideLayout(_BaseSlide):
         slides = self.part.package.presentation_part.presentation.slides
         return tuple(s for s in slides if s.slide_layout == self)
 
+    @property
+    def follow_master_background(self):
+        """|True| if this slide inherits the slide master background.
+
+        Assigning |False| causes background inheritance from the master to be
+        interrupted; if there is no custom background for this slide,
+        a default background is added. If a custom background already exists
+        for this slide, assigning |False| has no effect.
+
+        Assigning |True| causes any custom background for this slide to be
+        deleted and inheritance from the master restored.
+        """
+        return self._element.bg is None
+
+    @property
+    def color_map_override(self):
+        """ A new |ColorMap| to override that from the Slide Master or None"""
+        color_map = self._element.clrMapOvr.color_map_override
+        if color_map is None:
+            return None
+        return ColorMap(color_map)
 
 class SlideLayouts(ParentedElementProxy):
     """Sequence of slide layouts belonging to a slide-master.
@@ -443,6 +474,27 @@ class SlideMaster(_BaseMaster):
         """|SlideLayouts| object providing access to this slide-master's layouts."""
         return SlideLayouts(self._element.get_or_add_sldLayoutIdLst(), self)
 
+    @property
+    def theme(self):
+        """|Theme| object providing access to this slide-master's theme."""
+        return self.part.related_theme
+
+    @property
+    def color_map(self):
+        return ColorMap(self._element.clrMap)
+
+    @property
+    def title_style(self):
+        return TextListStyle(self._element.txStyles.titleStyle)
+
+    @property
+    def body_style(self):
+        return TextListStyle(self._element.txStyles.bodyStyle)
+    
+    @property
+    def other_style(self):
+        return TextListStyle(self._element.txStyles.otherStyle)
+
 
 class SlideMasters(ParentedElementProxy):
     """Sequence of |SlideMaster| objects belonging to a presentation.
@@ -519,3 +571,5 @@ class _Background(ElementProxy):
         """
         bgPr = self._cSld.get_or_add_bgPr()
         return FillFormat.from_fill_parent(bgPr)
+
+

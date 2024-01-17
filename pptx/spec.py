@@ -11,7 +11,7 @@ from pptx.enum.shapes import MSO_SHAPE
 GRAPHIC_DATA_URI_CHART = "http://schemas.openxmlformats.org/drawingml/2006/chart"
 GRAPHIC_DATA_URI_OLEOBJ = "http://schemas.openxmlformats.org/presentationml/2006/ole"
 GRAPHIC_DATA_URI_TABLE = "http://schemas.openxmlformats.org/drawingml/2006/table"
-
+GRAPHIC_DATA_URI_DRAWING = "http://schemas.openxmlformats.org/drawingml/2006/diagram"
 
 # ============================================================================
 # AutoShape type specs
@@ -618,4 +618,14 @@ autoshape_types = {
         "avLst": (("adj", 12500),),
     },
     MSO_SHAPE.WAVE: {"basename": "Wave", "avLst": (("adj1", 12500), ("adj2", 0))},
+    "bentConnector2": {"basename": "Elbow Connector", "avLst": (("adj1", 0),)},
+    "bentConnector3": {"basename": "Elbow Connector", "avLst": (("adj1", 0),)},
+    "bentConnector4": {"basename": "Elbow Connector", "avLst": (("adj1", 0),)},
+    "bentConnector5": {"basename": "Elbow Connector", "avLst": (("adj1", 0),)},
+    "straightConnector1": {"basename": "Straight Connector", "avLst": ()},
+    "line": {"basename": "Straight Connector", "avLst": ()},
+    "curvedConnector2": {"basename": "Curved Connector", "avLst": (("adj1", 0),)},
+    "curvedConnector3": {"basename": "Curved Connector", "avLst": (("adj1", 0),)},
+    "curvedConnector4": {"basename": "Curved Connector", "avLst": (("adj1", 0),)},
+    "curvedConnector5": {"basename": "Curved Connector", "avLst": (("adj1", 0),)},
 }

@@ -13,6 +13,7 @@ from pptx.enum.text import (
     MSO_TEXT_UNDERLINE_TYPE,
     MSO_VERTICAL_ANCHOR,
     PP_PARAGRAPH_ALIGNMENT,
+    AUTO_NUMBER_SCHEME
 )
 from pptx.exc import InvalidXmlError
 from pptx.oxml import parse_xml
@@ -28,6 +29,16 @@ from pptx.oxml.simpletypes import (
     ST_TextTypeface,
     ST_TextWrappingType,
     XsdBoolean,
+    XsdString,
+    ST_Percentage,
+    ST_TextPanose,
+    ST_TextPitchFamily,
+    ST_TextCharset,
+    ST_TextAutoNumType,
+    ST_TextBulletStartAtNum,
+    ST_TextBulletSizePercent,
+    ST_TextStrikeType,
+    
 )
 from pptx.oxml.xmlchemy import (
     BaseOxmlElement,
@@ -81,6 +92,7 @@ class CT_TextBody(BaseOxmlElement):
     """
 
     bodyPr = OneAndOnlyOne("a:bodyPr")
+    lstStyle = ZeroOrOne("a:lstStyle", successors=("p"))
     p = OneOrMore("a:p")
 
     def clear_content(self):
@@ -300,12 +312,13 @@ class CT_TextCharacterProperties(BaseOxmlElement):
     hlinkClick = ZeroOrOne(
         "a:hlinkClick", successors=("a:hlinkMouseOver", "a:rtl", "a:extLst")
     )
-
     lang = OptionalAttribute("lang", MSO_LANGUAGE_ID)
     sz = OptionalAttribute("sz", ST_TextFontSize)
     b = OptionalAttribute("b", XsdBoolean)
     i = OptionalAttribute("i", XsdBoolean)
     u = OptionalAttribute("u", MSO_TEXT_UNDERLINE_TYPE)
+    baseline = OptionalAttribute("baseline", ST_Percentage)
+    strike = OptionalAttribute("strike", ST_TextStrikeType)
 
     def _new_gradFill(self):
         return CT_GradientFillProperties.new_gradFill()
@@ -341,11 +354,14 @@ class CT_TextField(BaseOxmlElement):
 
 class CT_TextFont(BaseOxmlElement):
     """
-    Custom element class for <a:latin>, <a:ea>, <a:cs>, and <a:sym> child
+    Custom element class for <a:latin>, <a:ea>, <a:cs>, <a:buFont>, and <a:sym> child
     elements of CT_TextCharacterProperties, e.g. <a:rPr>.
     """
 
-    typeface = RequiredAttribute("typeface", ST_TextTypeface)
+    typeface = OptionalAttribute("typeface", ST_TextTypeface)
+    pitchFamily = OptionalAttribute("pitchFamily", ST_TextPitchFamily, default=0)
+    panose = OptionalAttribute("panose", ST_TextPanose)
+    charset = OptionalAttribute("charset", ST_TextCharset, default=1)
 
 
 class CT_TextLineBreak(BaseOxmlElement):
@@ -459,10 +475,42 @@ class CT_TextParagraphProperties(BaseOxmlElement):
     lnSpc = ZeroOrOne("a:lnSpc", successors=_tag_seq[1:])
     spcBef = ZeroOrOne("a:spcBef", successors=_tag_seq[2:])
     spcAft = ZeroOrOne("a:spcAft", successors=_tag_seq[3:])
+    eg_textBulletColor = ZeroOrOneChoice(
+        (
+            Choice("a:buClrTx"),
+            Choice("a:buClr")
+        ),
+        successors=_tag_seq[5:]
+    )
+    eg_textBulletSize = ZeroOrOneChoice(
+        (
+            Choice("a:buSzTx"),
+            Choice("a:buSzPct"),
+            Choice("a:buSzPts")
+        ),
+        successors=_tag_seq[8:]
+    )
+    eg_textBulletTypeface = ZeroOrOneChoice(
+        (Choice("a:buFontTx"), Choice("a:buFont")),
+        successors=_tag_seq[10:]
+    )
+    eg_textBullet = ZeroOrOneChoice(
+        (
+            Choice("a:buNone"),
+            Choice("a:buAutoNum"),
+            Choice("a:buChar"),
+            Choice("a:buBlip")
+        ),
+        successors=_tag_seq[14:]
+    )
     defRPr = ZeroOrOne("a:defRPr", successors=_tag_seq[16:])
+    marL = OptionalAttribute("marL", ST_Coordinate32, default=0)
+    marR = OptionalAttribute("marR", ST_Coordinate32, default=0)
     lvl = OptionalAttribute("lvl", ST_TextIndentLevelType, default=0)
+    indent = OptionalAttribute("indent", ST_Coordinate32, default=0)
     algn = OptionalAttribute("algn", PP_PARAGRAPH_ALIGNMENT)
     del _tag_seq
+
 
     @property
     def line_spacing(self):
@@ -575,3 +623,100 @@ class CT_TextSpacingPoint(BaseOxmlElement):
     """
 
     val = RequiredAttribute("val", ST_TextSpacingPoint)
+
+
+class CT_TextCharBullet(BaseOxmlElement):
+    """
+    <a:buChar> element, specifing the character used in a bullet point
+        - char is the actual character that is used for a bullet point.
+            It is displayed as part of the font set through the properies
+            in |CT_TextBulletFont|
+    """
+    char = RequiredAttribute('char', XsdString)
+
+
+class CT_TextBulletAutoNumber(BaseOxmlElement):
+    """
+    <a:buAutoNum> element, specifing the type used in a autonumbered list
+        - char_type sets the character and punctuation type.  Options are found
+            in  AUTO_NUMBER_SCHEME in pptx.enum.text
+
+    """
+    char_type = RequiredAttribute('type', AUTO_NUMBER_SCHEME)
+    startAt = OptionalAttribute('startAt', ST_TextBulletStartAtNum, default=1)
+
+class CT_TextNoBullet(BaseOxmlElement):
+    """`a:buNone` element, specifying if to disable a bullet"""
+    pass
+
+class CT_TextBulletColorFollowText(BaseOxmlElement):
+    """`a:buyClrTx` element, specifying bullet formatting to follow text formatting
+    """
+    pass
+class CT_TextBulletSizePercent(BaseOxmlElement):
+    """
+    <a:buSzPct> element, specifying bullet size in percent in its `val`
+    attribute.
+    """
+
+    val = OptionalAttribute("val", ST_TextBulletSizePercent)
+
+class CT_TextBulletSizePoints(BaseOxmlElement):
+    """
+    <a:buSzPts> element, specifying bullet size in points in its `val`
+    attribute.
+    """
+
+    val = OptionalAttribute("val", ST_TextFontSize)
+
+class CT_TextBulletSizeFollowText(BaseOxmlElement):
+    """
+    <a:buSzTx> element, specifying bullet to follow text size for 
+    bullet size
+    """
+    pass
+
+
+class CT_TextBulletTypefaceFollowText(BaseOxmlElement):
+    """
+    <a:buFontTx> element, specifying bullet to follow the text formatting
+    for bullet typeface settings
+    """
+    pass
+
+class CT_TextBlipBullet(BaseOxmlElement):
+    """
+    <a:buBlip> element, specifying a bullet as an image.
+    NOTE: Not fully Implemented yet
+    """
+    blip = OneAndOnlyOne("a:blip")
+
+
+
+class CT_FontCollection(BaseOxmlElement):
+    """
+    Custom element class for <a:font>, <a:majorFont>, <a:minorFont>
+    """
+
+    _tag_seq = (
+        "a:latin",
+        "a:ea",
+        "a:cs",
+        "a:font",
+        "a:extLst",
+    )
+
+    latin = OneAndOnlyOne("a:latin")
+    ea = OneAndOnlyOne("a:ea")
+    cs = OneAndOnlyOne("a:cs")
+    font = ZeroOrMore("a:font", successors=_tag_seq[4:])
+
+
+
+class CT_SupplementalFont(BaseOxmlElement):
+    """
+    Custom Element class for supplemental fonts
+    """
+    script = RequiredAttribute("script", XsdString)
+    typeface = RequiredAttribute("typeface", ST_TextTypeface)
+

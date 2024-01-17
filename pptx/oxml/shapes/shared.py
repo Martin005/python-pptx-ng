@@ -15,9 +15,18 @@ from pptx.oxml.simpletypes import (
     ST_LineWidth,
     ST_PlaceholderSize,
     ST_PositiveCoordinate,
+    ST_PositivePercentage,
     XsdBoolean,
     XsdString,
     XsdUnsignedInt,
+    ST_StyleMatrixColumnIndex,
+    ST_FontCollectionIndex,
+    ST_LineEndType,
+    ST_LineEndWidth,
+    ST_LineEndLength,
+    ST_LineCap,
+    ST_CompoundLine,
+    ST_PenAlignment,
 )
 from pptx.oxml.xmlchemy import (
     BaseOxmlElement,
@@ -27,6 +36,8 @@ from pptx.oxml.xmlchemy import (
     RequiredAttribute,
     ZeroOrOne,
     ZeroOrOneChoice,
+    OneAndOnlyOne,
+    ZeroOrMore,
 )
 from pptx.util import Emu
 
@@ -168,11 +179,32 @@ class BaseShapeElement(BaseOxmlElement):
         return self._nvXxPr.cNvPr.name
 
     @property
+    def hidden(self):
+        """
+        Hidden Status
+        """
+        return self._nvXxPr.cNvPr.hidden
+
+    @property
     def txBody(self):
         """
         Child ``<p:txBody>`` element, None if not present
         """
         return self.find(qn("p:txBody"))
+
+    @property
+    def style(self):
+        """
+        Child ``<p:style>`` element, None if not present
+        """
+        return self.find(qn("p:style"))
+
+    def remove_style(self):
+        """
+        Removes all style formatting
+        """
+        self.remove_if_present("p:style")
+
 
     @property
     def x(self):
@@ -264,10 +296,23 @@ class CT_LineProperties(BaseOxmlElement):
         ),
         successors=_tag_seq[4:],
     )
+    # TODO - the Dash options should actually be a ZeroOrOneChoice()
     prstDash = ZeroOrOne("a:prstDash", successors=_tag_seq[5:])
     custDash = ZeroOrOne("a:custDash", successors=_tag_seq[6:])
+    eg_lineJoinProperties = ZeroOrOneChoice(
+        (Choice("a:round"),
+        Choice("a:bevel"),
+        Choice("a:miter")),
+        successors=_tag_seq[9:]
+    )
+    headEnd = ZeroOrOne("a:headEnd", successors=_tag_seq[10:])
+    tailEnd = ZeroOrOne("a:tailEnd", successors=_tag_seq[11:])
     del _tag_seq
     w = OptionalAttribute("w", ST_LineWidth, default=Emu(0))
+    cap = OptionalAttribute("cap", ST_LineCap)
+    cmpd = OptionalAttribute("cmpd", ST_CompoundLine)
+    algn = OptionalAttribute("algn", ST_PenAlignment)
+
 
     @property
     def eg_fillProperties(self):
@@ -294,6 +339,32 @@ class CT_LineProperties(BaseOxmlElement):
         prstDash.val = val
 
 
+class CT_LineEndProperties(BaseOxmlElement):
+    """
+    Custom Element class for Line ends used by a:headEnd and a:tailEnd
+    """
+    endType = OptionalAttribute("type", ST_LineEndType)
+    w = OptionalAttribute("w", ST_LineEndWidth)
+    len = OptionalAttribute("len", ST_LineEndLength)
+
+class CT_LineJoinMiterProperties(BaseOxmlElement):
+    """Custom Element class for ``<a:miter>``"""
+    lim = OptionalAttribute("lim", ST_PositivePercentage)
+
+
+class CT_LineJoinRound(BaseOxmlElement):
+    """
+    Custom element class for ``<a:round>``
+    Empty element
+    """
+
+class CT_LineJoinBevel(BaseOxmlElement):
+    """
+    Custom element class for ``<a:bevel>``
+    Empty element
+    """
+
+
 class CT_NonVisualDrawingProps(BaseOxmlElement):
     """
     ``<p:cNvPr>`` custom element class.
@@ -304,6 +375,7 @@ class CT_NonVisualDrawingProps(BaseOxmlElement):
     hlinkHover = ZeroOrOne("a:hlinkHover", successors=_tag_seq[2:])
     id = RequiredAttribute("id", ST_DrawingElementId)
     name = RequiredAttribute("name", XsdString)
+    hidden = OptionalAttribute("hidden", XsdBoolean, default=False)
     del _tag_seq
 
 
@@ -330,10 +402,18 @@ class CT_Point2D(BaseOxmlElement):
 class CT_PositiveSize2D(BaseOxmlElement):
     """
     Custom element class for <a:ext> element.
+
+    NOTE: this is a composite including `CT_OfficeArtExtension`, which appears
+    with the `a:extLst` tag in many different elements.  It currently only implements
+    the inclusion of the optional URI tag and a single `ext` element for hyperlink color.
     """
+
+    hyperlinkColor = ZeroOrOne("ahyp:hlinkClr")
+    dataModelExt = ZeroOrOne("dsp:dataModelExt")
 
     cx = RequiredAttribute("cx", ST_PositiveCoordinate)
     cy = RequiredAttribute("cy", ST_PositiveCoordinate)
+    uri = OptionalAttribute("uri", XsdString)
 
 
 class CT_ShapeProperties(BaseOxmlElement):
@@ -361,8 +441,13 @@ class CT_ShapeProperties(BaseOxmlElement):
         "a:extLst",
     )
     xfrm = ZeroOrOne("a:xfrm", successors=_tag_seq[1:])
-    custGeom = ZeroOrOne("a:custGeom", successors=_tag_seq[2:])
-    prstGeom = ZeroOrOne("a:prstGeom", successors=_tag_seq[3:])
+    eg_Geometry = ZeroOrOneChoice(
+        (
+            Choice("a:custGeom"),
+            Choice("a:prstGeom")
+        ),
+        successors=_tag_seq[3:]
+    )
     eg_fillProperties = ZeroOrOneChoice(
         (
             Choice("a:noFill"),
@@ -501,3 +586,41 @@ class CT_Transform2D(BaseOxmlElement):
         off.x = 0
         off.y = 0
         return off
+
+
+class CT_ShapeStyle(BaseOxmlElement):
+    """ `p:style` custom element class
+    """
+    _tag_seq = ("a:lnRef", "a:fillRef", "a:effectRef", "a:fontRef")
+
+    lnRef = OneAndOnlyOne("a:lnRef")
+    fillRef = OneAndOnlyOne("a:fillRef")
+    effectRef = OneAndOnlyOne("a:effectRef")
+    fontRef = OneAndOnlyOne("a:fontRef")
+
+    del _tag_seq
+
+class CT_StyleMatrixReference(BaseOxmlElement):
+    """ Reference class used by `a:lnRef`, `a:fillRef`, and `a:effectRef`"""
+    eg_colorChoice = ZeroOrOneChoice((
+        Choice("a:scrgbClr"),
+        Choice("a:srgbClr"),
+        Choice("a:hslClr"),
+        Choice("a:sysClr"),
+        Choice("a:schemeClr"),
+        Choice("a:prstClr"),
+    ))
+    idx = RequiredAttribute("idx", ST_StyleMatrixColumnIndex)
+
+
+class CT_FontReference(BaseOxmlElement):
+    """ Reference class used by `a:fontRef` """
+    eg_colorChoice = ZeroOrOneChoice((
+        Choice("a:scrgbClr"),
+        Choice("a:srgbClr"),
+        Choice("a:hslClr"),
+        Choice("a:sysClr"),
+        Choice("a:schemeClr"),
+        Choice("a:prstClr"),
+    ))
+    idx = RequiredAttribute("idx", ST_FontCollectionIndex)

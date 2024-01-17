@@ -12,6 +12,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from pptx.dml.line import LineFormat
 from pptx.enum.shapes import MSO_SHAPE_TYPE
 from pptx.shapes.base import BaseShape
+from pptx.shapes.autoshape import AdjustmentCollection
 from pptx.util import Emu, lazyproperty
 
 
@@ -297,3 +298,20 @@ class Connector(BaseShape):
             2: (int(x + cx / 2), y + cy),
             3: (x + cx, int(y + cy / 2)),
         }[cxn_pt_idx]
+
+
+    @property
+    def connector_type(self):
+        prstGeom = self._element.spPr.prstGeom
+        if prstGeom is None:
+            return None
+        return prstGeom.prst
+
+    @lazyproperty
+    def adjustments(self):
+        """
+        Read-only reference to |AdjustmentCollection| instance for this
+        shape
+        """
+        return AdjustmentCollection(self._element.spPr.prstGeom)
+

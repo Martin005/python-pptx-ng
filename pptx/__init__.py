@@ -2,7 +2,7 @@
 
 """Initialization module for python-pptx package."""
 
-__version__ = "0.6.23"
+__version__ = "0.7.9"
 
 
 import pptx.exc as exceptions
@@ -16,6 +16,13 @@ from pptx.api import Presentation  # noqa
 from pptx.opc.constants import CONTENT_TYPE as CT  # noqa: E402
 from pptx.opc.package import PartFactory  # noqa: E402
 from pptx.parts.chart import ChartPart  # noqa: E402
+from pptx.parts.smartart import (  # noqua: E402
+    SmartArtDrawingPart,
+    SmartArtColorsPart,
+    SmartArtDataPart,
+    SmartArtLayoutPart,
+    SmartArtQuickStylePart,
+)
 from pptx.parts.coreprops import CorePropertiesPart  # noqa: E402
 from pptx.parts.image import ImagePart  # noqa: E402
 from pptx.parts.media import MediaPart  # noqa: E402
@@ -26,6 +33,7 @@ from pptx.parts.slide import (  # noqa: E402
     SlideLayoutPart,
     SlideMasterPart,
     SlidePart,
+    ThemePart,
 )
 
 content_type_to_part_class_map = {
@@ -39,7 +47,13 @@ content_type_to_part_class_map = {
     CT.PML_SLIDE: SlidePart,
     CT.PML_SLIDE_LAYOUT: SlideLayoutPart,
     CT.PML_SLIDE_MASTER: SlideMasterPart,
+    CT.OFC_THEME: ThemePart,
     CT.DML_CHART: ChartPart,
+    CT.DML_DIAGRAM_DRAWING: SmartArtDrawingPart,
+    CT.DML_DIAGRAM_COLORS: SmartArtColorsPart,
+    CT.DML_DIAGRAM_DATA: SmartArtDataPart,
+    CT.DML_DIAGRAM_LAYOUT: SmartArtLayoutPart,
+    CT.DML_DIAGRAM_STYLE: SmartArtQuickStylePart,
     CT.BMP: ImagePart,
     CT.GIF: ImagePart,
     CT.JPEG: ImagePart,
@@ -70,7 +84,15 @@ del (
     SlidePart,
     SlideLayoutPart,
     SlideMasterPart,
+    SmartArtDrawingPart,
+    SmartArtColorsPart,
+    SmartArtDataPart,
+    SmartArtLayoutPart,
+    SmartArtQuickStylePart,
     PresentationPart,
     CT,
     PartFactory,
 )
+
+def get_version():
+    print(f"Currently using version: {__version__}")

@@ -5,13 +5,14 @@
 import pytest
 
 from pptx.action import ActionSetting
+from pptx.dml.color import ColorFormat
 from pptx.dml.effect import ShadowFormat
 from pptx.enum.shapes import PP_PLACEHOLDER
 from pptx.oxml.shapes.shared import BaseShapeElement
 from pptx.oxml.text import CT_TextBody
 from pptx.shapes import Subshape
 from pptx.shapes.autoshape import Shape
-from pptx.shapes.base import BaseShape, _PlaceholderFormat
+from pptx.shapes.base import BaseShape, _PlaceholderFormat, ShapeStyle, StyleMatrixReference
 from pptx.shapes.graphfrm import GraphicFrame
 from pptx.shapes.picture import Picture
 from pptx.shapes.shapetree import BaseShapeFactory, SlideShapes
@@ -57,6 +58,15 @@ class DescribeBaseShape(object):
         shape.name = new_value
         assert shape._element.xml == expected_xml
 
+    def it_knows_its_hidden_status(self, hidden_get_fixture):
+        shape, hidden = hidden_get_fixture
+        assert shape.hidden == hidden
+
+    def it_can_change_its_hidden_status(self, hidden_set_fixture):
+        shape, new_value, expected_xml = hidden_set_fixture
+        shape.hidden = new_value
+        assert shape._element.xml == expected_xml
+
     def it_has_a_position(self, position_get_fixture):
         shape, expected_left, expected_top = position_get_fixture
         assert shape.left == expected_left
@@ -88,6 +98,24 @@ class DescribeBaseShape(object):
         shape.rotation = new_value
         assert shape._element.xml == expected_xml
 
+    def it_knows_its_horizontal_flip(self, flip_h_get_fixture):
+        shape, expected_value = flip_h_get_fixture
+        assert shape.flip_h == expected_value
+    
+    def it_can_change_its_horizontal_flip(self, flip_h_set_fixture):
+        shape, new_value, expected_xml = flip_h_set_fixture
+        shape.flip_h = new_value
+        assert shape._element.xml == expected_xml
+
+    def it_knows_its_vertical_flip(self, flip_v_get_fixture):
+        shape, expected_value = flip_v_get_fixture
+        assert shape.flip_v == expected_value
+    
+    def it_can_change_its_vertical_flip(self, flip_v_set_fixture):
+        shape, new_value, expected_xml = flip_v_set_fixture
+        shape.flip_v = new_value
+        assert shape._element.xml == expected_xml
+
     def it_provides_access_to_its_shadow(self, shadow_fixture):
         shape, ShadowFormat_, spPr, shadow_ = shadow_fixture
 
@@ -95,6 +123,19 @@ class DescribeBaseShape(object):
 
         ShadowFormat_.assert_called_once_with(spPr)
         assert shadow is shadow_
+
+    def it_provides_access_to_its_style(self, style_fixture):
+        shape, StyleFormat_, spStyle, style_ = style_fixture
+        style = shape.style
+        
+        assert style is style_
+
+    def it_removes_its_style(self, style_fixture):
+        shape, StyleFormat_, spStyle, style_ = style_fixture
+        shape.remove_style()
+        style = shape.style
+
+        assert style is None
 
     def it_knows_the_part_it_belongs_to(self, part_fixture):
         shape, parent_ = part_fixture
@@ -255,6 +296,62 @@ class DescribeBaseShape(object):
         expected_xml = xml(expected_xSp_cxml)
         return shape, new_value, expected_xml
 
+    @pytest.fixture(
+        params = [
+            (True, "true"),
+            (False, 0)
+        ]
+    )
+    def hidden_get_fixture(self, request):
+        hidden_status, xml_value = request.param
+        shape_elm = (
+            an_sp()
+            .with_nsdecls()
+            .with_child(an_nvSpPr().with_child(a_cNvPr().with_hidden(xml_value)))
+        ).element
+        shape = BaseShape(shape_elm, None)
+        return shape, hidden_status
+
+    @pytest.fixture(
+        params=[
+            (
+                "p:sp/p:nvSpPr/p:cNvPr{id=1,hidden=true}",
+                Shape,
+                False,
+                "p:sp/p:nvSpPr/p:cNvPr{id=1}",
+            ),
+            (
+                "p:grpSp/p:nvGrpSpPr/p:cNvPr{id=2}",
+                BaseShape,
+                True,
+                "p:grpSp/p:nvGrpSpPr/p:cNvPr{id=2,hidden=1}",
+            ),
+            (
+                "p:graphicFrame/p:nvGraphicFramePr/p:cNvPr{id=3,hidden=true}",
+                GraphicFrame,
+                False,
+                "p:graphicFrame/p:nvGraphicFramePr/p:cNvPr{id=3}",
+            ),
+            (
+                "p:cxnSp/p:nvCxnSpPr/p:cNvPr{id=4}",
+                BaseShape,
+                True,
+                "p:cxnSp/p:nvCxnSpPr/p:cNvPr{id=4,hidden=1}",
+            ),
+            (
+                "p:pic/p:nvPicPr/p:cNvPr{id=5,hidden=true}",
+                Picture,
+                False,
+                "p:pic/p:nvPicPr/p:cNvPr{id=5}",
+            ),
+        ]
+    )
+    def hidden_set_fixture(self, request):
+        xSp_cxml, ShapeCls, new_value, expected_xSp_cxml = request.param
+        shape = ShapeCls(element(xSp_cxml), None)
+        expected_xml = xml(expected_xSp_cxml)
+        return shape, new_value, expected_xml
+
     @pytest.fixture
     def part_fixture(self, shapes_):
         parent_ = shapes_
@@ -341,6 +438,76 @@ class DescribeBaseShape(object):
         shape = BaseShapeFactory(element(xSp_cxml), None)
         expected_xml = xml(expected_xSp_cxml)
         return shape, new_value, expected_xml
+
+    @pytest.fixture(
+        params=[
+            ("p:sp/p:spPr", False),
+            ("p:sp/p:spPr/a:xfrm{flipH=1}", True),
+            ("p:sp/p:spPr/a:xfrm{flipH=0}", False),
+            ("p:sp/p:spPr/a:xfrm{flipH=true}", True),
+            ("p:sp/p:spPr/a:xfrm{flipH=false}", False),
+        ]
+    )
+    def flip_h_get_fixture(self, request):
+        xSp_cxml, expected_value = request.param
+        shape = BaseShapeFactory(element(xSp_cxml), None)
+        return shape, expected_value
+
+    @pytest.fixture(
+        params=[
+            ("p:sp/p:spPr/a:xfrm", True, "p:sp/p:spPr/a:xfrm{flipH=1}"),
+            ("p:sp/p:spPr/a:xfrm{flipH=1}", False, "p:sp/p:spPr/a:xfrm"),
+            ("p:grpSp/p:grpSpPr/a:xfrm", True, "p:grpSp/p:grpSpPr/a:xfrm{flipH=1}"),
+        ]
+    )
+    def flip_h_set_fixture(self, request):
+        xSp_cxml, new_value, expected_xSp_cxml = request.param
+        shape = BaseShapeFactory(element(xSp_cxml), None)
+        expected_xml = xml(expected_xSp_cxml)
+        return shape, new_value, expected_xml
+
+    @pytest.fixture(
+        params=[
+            ("p:sp/p:spPr", False),
+            ("p:sp/p:spPr/a:xfrm{flipV=1}", True),
+            ("p:sp/p:spPr/a:xfrm{flipV=0}", False),
+            ("p:sp/p:spPr/a:xfrm{flipV=true}", True),
+            ("p:sp/p:spPr/a:xfrm{flipV=false}", False),
+        ]
+    )
+    def flip_v_get_fixture(self, request):
+        xSp_cxml, expected_value = request.param
+        shape = BaseShapeFactory(element(xSp_cxml), None)
+        return shape, expected_value
+
+    @pytest.fixture(
+        params=[
+            ("p:sp/p:spPr/a:xfrm", True, "p:sp/p:spPr/a:xfrm{flipV=1}"),
+            ("p:sp/p:spPr/a:xfrm{flipV=1}", False, "p:sp/p:spPr/a:xfrm"),
+            ("p:grpSp/p:grpSpPr/a:xfrm", True, "p:grpSp/p:grpSpPr/a:xfrm{flipV=1}"),
+        ]
+    )
+    def flip_v_set_fixture(self, request):
+        xSp_cxml, new_value, expected_xSp_cxml = request.param
+        shape = BaseShapeFactory(element(xSp_cxml), None)
+        expected_xml = xml(expected_xSp_cxml)
+        return shape, new_value, expected_xml
+
+    @pytest.fixture(
+        params=[
+            "p:sp/p:style",
+            "p:pic/p:style",
+            # ---group shapes override this property---
+        ]
+    )
+    def style_fixture(self, request, StyleFormat_, style_):
+        sp_cxml = request.param
+        sp = element(sp_cxml)
+        spStyle = sp.xpath("//p:style")[0]
+        StyleFormat_.return_value = style_
+
+        shape = BaseShape(sp, style_)
+        return shape, StyleFormat_, spStyle, style_
 
     @pytest.fixture(
         params=[
@@ -505,6 +672,14 @@ class DescribeBaseShape(object):
         return class_mock(request, "pptx.shapes.base.ShadowFormat")
 
     @pytest.fixture
+    def style_(self, request):
+        return instance_mock(request, ShapeStyle)
+
+    @pytest.fixture
+    def StyleFormat_(self, request, style_):
+        return class_mock(request, "pptx.shapes.base.ShapeStyle", return_value=style_)
+
+    @pytest.fixture
     def shape_elm_(self, request, shape_id, shape_name, txBody_):
         return instance_mock(
             request,
@@ -609,3 +784,42 @@ class Describe_PlaceholderFormat(object):
         ph_cxml, expected_value = request.param
         placeholder_format = _PlaceholderFormat(element(ph_cxml))
         return placeholder_format, expected_value
+
+
+
+class Describe_StyleMatrixReference(object):
+    def it_knows_its_idx(self, idx_get_fixture):
+        matrix_reference, expected_value = idx_get_fixture
+        assert matrix_reference.idx == expected_value
+    
+    def it_can_change_its_idx(self, idx_set_fixture):
+        matrix_reference, new_value, expected_xml = idx_set_fixture
+        matrix_reference.idx = new_value
+        assert matrix_reference._reference.xml == expected_xml
+
+    def it_has_a_color_reference(self, color_get_fixture):
+        assert isinstance(color_get_fixture.color_reference, ColorFormat)
+
+
+    @pytest.fixture(params=[("a:lnRef{idx=10}", 10),])
+    def idx_get_fixture(self, request):
+        ph_cxml, expected_value = request.param
+        matrix_reference = StyleMatrixReference(element(ph_cxml))
+        return matrix_reference, expected_value
+
+    @pytest.fixture(
+        params=[
+            ("a:lnRef{idx=3}", 1, "a:lnRef{idx=1}"),
+        ]
+    )
+    def idx_set_fixture(self, request):
+        xSp_cxml, new_value, expected_xSp_cxml = request.param
+        matrix_refernce = StyleMatrixReference(element(xSp_cxml))
+        expected_xml = xml(expected_xSp_cxml)
+        return matrix_refernce, new_value, expected_xml
+
+    @pytest.fixture(params=["a:lnRef{idx=10}"])
+    def color_get_fixture(self, request):
+        matrix_reference = StyleMatrixReference(element(request.param))
+        return matrix_reference
+

@@ -150,6 +150,17 @@ class FillFormat(object):
         solidFill = self._xPr.get_or_change_to_solidFill()
         self._fill = _SolidFill(solidFill)
 
+    def group(self):
+        """
+        Sets the fill type to group, i.e. it matches the fill defined by
+        the parent group shape.
+        """
+
+        groupFill = self._xPr.get_or_change_to_grpFill()
+        self._fill = _GrpFill(groupFill)
+
+
+
     @property
     def type(self):
         """
@@ -367,6 +378,11 @@ class _GradientStops(Sequence):
 
     def __len__(self):
         return len(self._gsLst)
+
+
+    def add_gradient_stop(self):
+        self._gsLst.add_gs()
+        return _GradientStop(self._gsLst[-1])
 
 
 class _GradientStop(ElementProxy):

@@ -11,6 +11,7 @@ from pptx.parts.presentation import PresentationPart
 from pptx.parts.slide import SlideLayoutPart, SlideMasterPart, SlidePart
 from pptx.presentation import Presentation
 from pptx.shapes.base import BaseShape
+from pptx.theme import Theme, ColorMap
 from pptx.shapes.placeholder import LayoutPlaceholder, NotesSlidePlaceholder
 from pptx.shapes.shapetree import (
     LayoutPlaceholders,
@@ -35,7 +36,7 @@ from pptx.slide import (
     SlideMasters,
     Slides,
 )
-from pptx.text.text import TextFrame
+from pptx.text.text import TextFrame, TextListStyle
 
 from .unitutil.cxml import element, xml
 from .unitutil.mock import call, class_mock, instance_mock, method_mock, property_mock
@@ -645,6 +646,12 @@ class DescribeSlideLayout(object):
         slide_master = slide_layout.slide_master
 
         assert slide_master is slide_master_
+    
+    def it_knows_whether_it_follows_the_mstr_bkgd(self, follow_get_fixture):
+        slide, expected_value = follow_get_fixture
+        follows = slide.follow_master_background
+        assert follows is expected_value
+
 
     def it_knows_which_slides_are_based_on_it(
         self,
@@ -697,6 +704,13 @@ class DescribeSlideLayout(object):
         presentation_.slides = slides
         expected_value = tuple(s for i, s in enumerate(slides) if i in used_by_idxs)
         return presentation_, slide_layout, expected_value
+
+    @pytest.fixture(params=[("p:sld/p:cSld", True), ("p:sld/p:cSld/p:bg", False)])
+    def follow_get_fixture(self, request):
+        pSld_cxml, expected_value = request.param
+        slide = Slide(element(pSld_cxml), None)
+        return slide, expected_value
+
 
     # fixture components -----------------------------------
 
@@ -947,6 +961,47 @@ class DescribeSlideMaster(object):
         SlideLayouts_.assert_called_once_with(sldLayoutIdLst, slide_master)
         assert slide_layouts is slide_layouts_
 
+    def it_provides_access_to_its_theme(self, theme_, part_prop_):
+        part_prop_.return_value.related_theme = theme_
+        slide_master = SlideMaster(None, None)
+
+        theme = slide_master.theme
+
+        assert theme is theme_
+    
+    def it_provides_access_to_its_title_style(self, title_style_fixture):
+        master_slide, _SlideMaster_titlestyle_, style_list_ = title_style_fixture
+
+        title_style = master_slide.title_style
+
+        _SlideMaster_titlestyle_.assert_called_once_with()
+        assert title_style is style_list_
+
+    def it_provides_access_to_its_body_style(self, body_style_fixture):
+        master_slide, _SlideMaster_bodystyle_, style_list_ = body_style_fixture
+
+        body_style = master_slide.body_style
+
+        _SlideMaster_bodystyle_.assert_called_once_with()
+        assert body_style is style_list_
+
+    def it_provides_access_to_its_other_style(self, other_style_fixture):
+        master_slide, _SlideMaster_otherstyle_, style_list_ = other_style_fixture
+
+        other_style = master_slide.other_style
+
+        _SlideMaster_otherstyle_.assert_called_once_with()
+        assert other_style is style_list_
+
+    def it_provides_access_to_its_color_map(self, color_map_fixture):
+        master_slide, _SlideMaster_colormap_, color_map_ = color_map_fixture
+
+        color_map = master_slide.color_map
+
+        _SlideMaster_colormap_.assert_called_once_with()
+        assert color_map is color_map_
+
+    
     # fixtures -------------------------------------------------------
 
     @pytest.fixture
@@ -960,6 +1015,33 @@ class DescribeSlideMaster(object):
     def subclass_fixture(self):
         return SlideMaster(None, None)
 
+    @pytest.fixture
+    def title_style_fixture(self, _SlideMaster_titlestyle_, style_list_):
+        master_slide = SlideMaster(None, None)
+        _SlideMaster_titlestyle_.return_value = style_list_
+        return master_slide, _SlideMaster_titlestyle_, style_list_
+
+    @pytest.fixture
+    def body_style_fixture(self, _SlideMaster_bodystyle_, style_list_):
+        master_slide = SlideMaster(None, None)
+        _SlideMaster_bodystyle_.return_value = style_list_
+        return master_slide, _SlideMaster_bodystyle_, style_list_
+
+    @pytest.fixture
+    def other_style_fixture(self, _SlideMaster_otherstyle_, style_list_):
+        master_slide = SlideMaster(None, None)
+        _SlideMaster_otherstyle_.return_value = style_list_
+        return master_slide, _SlideMaster_otherstyle_, style_list_
+
+    @pytest.fixture
+    def color_map_fixture(self, _SlideMaster_colormap_, color_map_):
+        master_slide = SlideMaster(None, None)
+        _SlideMaster_colormap_.return_value = color_map_
+        return master_slide, _SlideMaster_colormap_, color_map_
+
+
+
+
     # fixture components -----------------------------------
 
     @pytest.fixture
@@ -971,6 +1053,45 @@ class DescribeSlideMaster(object):
     @pytest.fixture
     def slide_layouts_(self, request):
         return instance_mock(request, SlideLayouts)
+
+    @pytest.fixture
+    def part_prop_(self, request, slide_master_part_):
+        return property_mock(
+            request, SlideMaster, "part", return_value=slide_master_part_
+        )
+
+    @pytest.fixture
+    def slide_master_part_(self, request):
+        return instance_mock(request, SlideMasterPart)
+
+    @pytest.fixture
+    def theme_(self, request):
+        return instance_mock(request, Theme)
+
+    @pytest.fixture
+    def _SlideMaster_titlestyle_(self, request):
+        return property_mock(request, SlideMaster, "title_style")
+
+    @pytest.fixture
+    def _SlideMaster_bodystyle_(self, request):
+        return property_mock(request, SlideMaster, "body_style")
+
+    @pytest.fixture
+    def _SlideMaster_otherstyle_(self, request):
+        return property_mock(request, SlideMaster, "other_style")
+
+    @pytest.fixture
+    def _SlideMaster_colormap_(self, request):
+        return property_mock(request, SlideMaster, "color_map")
+
+    @pytest.fixture
+    def style_list_(self, request):
+        return instance_mock(request, TextListStyle)
+
+    @pytest.fixture
+    def color_map_(self, request):
+        return instance_mock(request, ColorMap)
+
 
 
 class DescribeSlideMasters(object):

@@ -92,6 +92,25 @@ class ColorFormat(object):
         self._color.theme_color = mso_theme_color_idx
 
     @property
+    def preset_color(self):
+        """  Preset Color value of this color.
+        
+        A list of specific strings defined in the simpletype ST_PreseteColorVal.
+        None if no preset color is explicitly defined.  Setting this to
+        a value in causes the color's type to 
+        change to ``MSO_COLOR_TYPE.PRESET``
+        """
+        return self._color.preset_color
+
+    @preset_color.setter
+    def preset_color(self, mso_preset_color_val):
+        # change to theme color format if not already
+        if not isinstance(self._color, _PrstColor):
+            prstColor = self._xFill.get_or_change_to_prstClr()
+            self._color = _PrstColor(prstColor)
+        self._color.preset_color = mso_preset_color_val
+
+    @property
     def type(self):
         """
         Read-only. A value from :ref:`MsoColorType`, either RGB or SCHEME,
@@ -109,6 +128,62 @@ class ColorFormat(object):
                 " or .theme_color first."
             )
             raise ValueError(msg)
+    
+    @property
+    def system_color(self):
+        """ System color value for this color.
+        """
+        return self._color.system_color
+    
+    @system_color.setter
+    def system_color(self, value):
+        # Change to System color format if not already
+        if not isinstance(self._color, _SysColor):
+            sysColor = self._xFill.get_or_change_to_sysClr()
+            self._color = _SysColor(sysColor)
+        self._color.system_color = value
+    
+    @property
+    def red(self):
+        """ SCRGB Red Value """
+        return self._color.red
+    
+    @red.setter
+    def red(self, percent):
+        # change to scrgb color format if not already
+        if not isinstance(self._color, _ScRgbColor):
+            scrgbClr = self._xFill.get_or_change_to_scrgbClr()
+            self._color = _ScRgbColor(scrgbClr)
+        # call _ScRgbColor instance to do the setting
+        self._color.red = percent
+
+    @property
+    def blue(self):
+        """ SCRGB Blue Value """
+        return self._color.blue
+    
+    @blue.setter
+    def blue(self, percent):
+        # change to scrgb color format if not already
+        if not isinstance(self._color, _ScRgbColor):
+            scrgbClr = self._xFill.get_or_change_to_scrgbClr()
+            self._color = _ScRgbColor(scrgbClr)
+        # call _ScRgbColor instance to do the setting
+        self._color.blue = percent
+
+    @property
+    def green(self):
+        """ SCRGB Green Value """
+        return self._color.green
+    
+    @green.setter
+    def green(self, percent):
+        # change to scrgb color format if not already
+        if not isinstance(self._color, _ScRgbColor):
+            scrgbClr = self._xFill.get_or_change_to_scrgbClr()
+            self._color = _ScRgbColor(scrgbClr)
+        # call _ScRgbColor instance to do the setting
+        self._color.green = percent
 
 
 class _Color(object):
@@ -165,7 +240,7 @@ class _Color(object):
     @property
     def rgb(self):
         """
-        Raises TypeError on access unless overridden by subclass.
+        Raises AttributeError on access unless overridden by subclass.
         """
         tmpl = "no .rgb property on color type '%s'"
         raise AttributeError(tmpl % self.__class__.__name__)
@@ -176,6 +251,48 @@ class _Color(object):
         Raises TypeError on access unless overridden by subclass.
         """
         return MSO_THEME_COLOR.NOT_THEME_COLOR
+
+    @property
+    def system_color(self):
+        """
+        Raises TypeError on access unless overridden by subclass.
+        """
+        return None
+
+    @property
+    def preset_color(self):
+        """
+        Rasises AttributeError on access unless overridden by subclass
+        """
+        tmpl = "no .preset_color property on color type '%s'"
+        raise AttributeError(tmpl % self.__class__.__name__)
+
+    @property
+    def red(self):
+        """
+        Raises AttributeError on access unless overridden by subclass.
+        """
+        tmpl = "no .red property on color type '%s'"
+        raise AttributeError(tmpl % self.__class__.__name__)
+
+    @property
+    def green(self):
+        """
+        Raises AttributeError on access unless overridden by subclass.
+        """
+        tmpl = "no .green property on color type '%s'"
+        raise AttributeError(tmpl % self.__class__.__name__)
+
+    @property
+    def blue(self):
+        """
+        Raises AttributeError on access unless overridden by subclass.
+        """
+        tmpl = "no .blue property on color type '%s'"
+        raise AttributeError(tmpl % self.__class__.__name__)
+
+
+
 
     def _shade(self, value):
         lumMod_val = 1.0 - abs(value)
@@ -212,9 +329,27 @@ class _NoneColor(_Color):
 
 
 class _PrstColor(_Color):
+    def __init__(self, prstClr):
+        super(_PrstColor, self).__init__(prstClr)
+        self._prstClr = prstClr
+
     @property
     def color_type(self):
         return MSO_COLOR_TYPE.PRESET
+
+    @property
+    def preset_color(self):
+        """
+        Preset Color value of this color, one of those defined in the 
+        MSO_PRESET_COLOR_INDEX enumeration.  None if no preset color is
+        explicitly defined.  Setting this to a value in MSO_PRESET_COLOR_INDEX
+        causes the color's type to change to ``MSO_COLOR_TYPE.PRESET``
+        """
+        return self._prstClr.val
+
+    @preset_color.setter
+    def preset_color(self, mso_preset_color_val):
+        self._prstClr.val = mso_preset_color_val
 
 
 class _SchemeColor(_Color):
@@ -243,10 +378,37 @@ class _SchemeColor(_Color):
 
 
 class _ScRgbColor(_Color):
+    def __init__(self, scrgbClr):
+        super(_ScRgbColor, self).__init__(scrgbClr)
+        self._scrgbClr = scrgbClr
+
     @property
     def color_type(self):
         return MSO_COLOR_TYPE.SCRGB
 
+    @property
+    def red(self):
+        return self._scrgbClr.r
+    
+    @red.setter
+    def red(self, percent):
+        self._scrgbClr.r = percent
+
+    @property
+    def green(self):
+        return self._scrgbClr.g
+    
+    @green.setter
+    def green(self, percent):
+        self._scrgbClr.g = percent
+
+    @property
+    def blue(self):
+        return self._scrgbClr.b
+
+    @blue.setter
+    def blue(self, percent):
+        self._scrgbClr.b = percent
 
 class _SRgbColor(_Color):
     def __init__(self, srgbClr):
@@ -271,9 +433,27 @@ class _SRgbColor(_Color):
 
 
 class _SysColor(_Color):
+    def __init__(self, sysClr):
+        super(_SysColor, self).__init__(sysClr)
+        self._sysClr = sysClr
+
     @property
     def color_type(self):
         return MSO_COLOR_TYPE.SYSTEM
+    
+    @property
+    def system_color(self):
+        """
+        """
+        return self._sysClr.val
+    
+    @system_color.setter
+    def system_color(self, value):
+        """
+        """
+        self._sysClr.val = value
+
+
 
 
 class RGBColor(tuple):
